@@ -6,52 +6,26 @@
     <meta name="description" content="Portafolio profesional de Ray 3D – Arte 3D, renders realistas de Minecraft y modelado Blockbench." />
     <meta property="og:title" content="Ray 3D – Portafolio 3D" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://laxxts-coder.github.io/portafolio-ray-3d/" />
+    <meta property="og:url" content="https://laxxts-coder.github.io/PortafolioRay3D/" />
+    <meta property="og:image" content="https://laxxts-coder.github.io/PortafolioRay3D/assets/og-image.jpg" />
     <meta name="theme-color" content="#15161A" />
     <title>Ray 3D · Portafolio</title>
-
-    <!-- Google Fonts -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23B08D57' rx='4'/></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <!-- ============================================================
-    FONDO DINÁMICO - PARTICULAS (Canvas)
-    ============================================================ -->
-    <canvas id="particles-canvas"></canvas>
+    <!-- Loadbar (generando chunk) -->
+    <div class="loadbar" role="progressbar" aria-label="Cargando portafolio" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
-    <!-- BLOQUES FLOTANTES -->
-    <div class="floating-blocks" aria-hidden="true">
-        <div class="floating-block"></div>
-        <div class="floating-block"></div>
-        <div class="floating-block"></div>
-        <div class="floating-block"></div>
-        <div class="floating-block"></div>
-        <div class="floating-block"></div>
-        <div class="floating-block"></div>
-        <div class="floating-block"></div>
-    </div>
+    <!-- FONDO DINÁMICO (voxels ambientales) -->
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <div class="bg-vignette" aria-hidden="true"></div>
 
-    <!-- SCROLL PROGRESS -->
-    <div class="scroll-progress" id="scrollProgress" role="progressbar" aria-label="Progreso de scroll"></div>
-
-    <!-- LOADBAR -->
-    <div class="loadbar" role="progressbar" aria-label="Cargando portafolio" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-        <div class="bar-fill"></div>
-    </div>
-
-    <!-- CURSOR PERSONALIZADO -->
-    <div class="custom-cursor" id="customCursor"></div>
-    <div class="custom-cursor-dot" id="customCursorDot"></div>
-
-    <!-- ============================================================
-    NAV
-    ============================================================ -->
+    <!-- NAV -->
     <header class="nav" role="navigation" aria-label="Navegación principal">
         <div class="nav-inner">
             <a href="#" class="logo" aria-label="Inicio">RAY 3D</a>
@@ -68,142 +42,102 @@
     </header>
 
     <main>
-        <!-- ============================================================
-        HERO
-        ============================================================ -->
+        <!-- SPAWN / HERO -->
         <section class="hero" id="spawn">
+            <div class="hero-glow" aria-hidden="true"></div>
             <div class="hero-content">
-                <div class="hero-avatar" aria-hidden="true">
-                    <svg viewBox="0 0 64 64" width="80" height="80">
-                        <rect x="8" y="8" width="48" height="48" fill="#B08D57" rx="4" />
-                        <rect x="16" y="16" width="12" height="12" fill="#2C2F33" />
-                        <rect x="36" y="16" width="12" height="12" fill="#2C2F33" />
-                        <rect x="24" y="36" width="16" height="12" fill="#2C2F33" />
-                        <rect x="16" y="48" width="8" height="8" fill="#1E1F23" />
-                        <rect x="40" y="48" width="8" height="8" fill="#1E1F23" />
-                    </svg>
+                <div class="hero-avatar hero-anim" style="--d:0ms" aria-hidden="true">
+                    <div class="hero-avatar-float">
+                        <svg class="hero-avatar-svg" viewBox="0 0 64 64" width="80" height="80">
+                            <rect x="8" y="8" width="48" height="48" fill="#B08D57" rx="4" />
+                            <rect x="16" y="16" width="12" height="12" fill="#2C2F33" />
+                            <rect x="36" y="16" width="12" height="12" fill="#2C2F33" />
+                            <rect x="24" y="36" width="16" height="12" fill="#2C2F33" />
+                            <rect x="16" y="48" width="8" height="8" fill="#1E1F23" />
+                            <rect x="40" y="48" width="8" height="8" fill="#1E1F23" />
+                        </svg>
+                    </div>
                 </div>
-                <h1 class="hero-title">Ray 3D</h1>
-                <p class="hero-sub">Render realista &amp; modelado 3D</p>
-                <p class="hero-desc">Ambientes Minecraft · Blockbench · Blender</p>
-                <div class="hero-cta">
+                <h1 class="hero-title hero-anim" style="--d:80ms">Ray 3D</h1>
+                <p class="hero-sub hero-anim" style="--d:150ms">Render realista &amp; modelado 3D</p>
+                <p class="hero-desc hero-anim" style="--d:220ms">Ambientes Minecraft · Blockbench · Blender</p>
+                <div class="hero-cta hero-anim" style="--d:290ms">
                     <a href="#build" class="btn btn-primary">Ver builds</a>
                     <a href="#contact" class="btn btn-secondary">Contactar</a>
                 </div>
             </div>
         </section>
 
-        <!-- ============================================================
-        PORTFOLIO - THE BUILD SITE
-        ============================================================ -->
+        <!-- THE BUILD SITE (portafolio) -->
         <section class="section" id="build">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">The Build Site</h2>
                 <p class="section-sub">Proyectos destacados</p>
             </div>
-
-            <!-- FILTROS -->
-            <div class="filter-bar">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="ambiente">Ambientes</button>
-                <button class="filter-btn" data-filter="modelado">Modelado</button>
-                <button class="filter-btn" data-filter="animacion">Animación</button>
-            </div>
-
-            <div class="grid portfolio-grid" id="portfolioGrid">
-                <!-- Forest -->
-                <article class="card portfolio-card reveal" data-project="forest" data-category="ambiente" 
-                         data-image="assets/forest.jpg" data-raw="assets/forest-raw.jpg" role="button" tabindex="0">
-                    <div class="card-image" style="background-image: url('assets/forest-thumb.jpg'), linear-gradient(135deg, #2d3a2a, #1a2218);">
+            <div class="grid portfolio-grid">
+                <article class="card portfolio-card reveal" data-project="forest" role="button" tabindex="0" aria-label="Abrir caso de estudio: Forest">
+                    <div class="card-image" style="background-image: linear-gradient(135deg, #2d3a2a, #1a2218);">
                         <span class="card-tag">Ambiente</span>
-                        <div class="card-overlay">
-                            <span class="card-overlay-icon">🔍</span>
-                            <span class="card-overlay-text">Ver proyecto</span>
-                        </div>
                     </div>
                     <h3 class="card-title">Forest</h3>
                     <p class="card-desc">Render realista de bosque oscuro</p>
                 </article>
-
-                <!-- Pool -->
-                <article class="card portfolio-card reveal" data-project="pool" data-category="ambiente"
-                         data-image="assets/pool.jpg" data-raw="assets/pool-raw.jpg" role="button" tabindex="0">
-                    <div class="card-image" style="background-image: url('assets/pool-thumb.jpg'), linear-gradient(135deg, #1e3a4a, #0f222b);">
+                <article class="card portfolio-card reveal" data-project="pool" role="button" tabindex="0" aria-label="Abrir caso de estudio: Pool">
+                    <div class="card-image" style="background-image: linear-gradient(135deg, #1e3a4a, #0f222b);">
                         <span class="card-tag">Ambiente</span>
-                        <div class="card-overlay">
-                            <span class="card-overlay-icon">🔍</span>
-                            <span class="card-overlay-text">Ver proyecto</span>
-                        </div>
                     </div>
                     <h3 class="card-title">Pool</h3>
                     <p class="card-desc">Piscina con iluminación volumétrica</p>
                 </article>
-
-                <!-- Hide and Seek -->
-                <article class="card portfolio-card reveal" data-project="hide" data-category="modelado"
-                         data-image="assets/hide.jpg" data-raw="assets/hide-raw.jpg" role="button" tabindex="0">
-                    <div class="card-image" style="background-image: url('assets/hide-thumb.jpg'), linear-gradient(135deg, #3d2a1a, #221510);">
+                <article class="card portfolio-card reveal" data-project="hide" role="button" tabindex="0" aria-label="Abrir caso de estudio: Hide and Seek">
+                    <div class="card-image" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
                         <span class="card-tag">Modelado</span>
-                        <div class="card-overlay">
-                            <span class="card-overlay-icon">🔍</span>
-                            <span class="card-overlay-text">Ver proyecto</span>
-                        </div>
                     </div>
                     <h3 class="card-title">Hide and Seek</h3>
                     <p class="card-desc">Escena de persecución en Blockbench</p>
                 </article>
-
-                <!-- El Circulo BerSty -->
-                <article class="card portfolio-card reveal" data-project="circle" data-category="animacion"
-                         data-image="assets/circle.jpg" data-raw="assets/circle-raw.jpg" role="button" tabindex="0">
-                    <div class="card-image" style="background-image: url('assets/circle-thumb.jpg'), linear-gradient(135deg, #2a1e3a, #171022);">
+                <article class="card portfolio-card reveal" data-project="circle" role="button" tabindex="0" aria-label="Abrir caso de estudio: El Circulo BerSty">
+                    <div class="card-image" style="background-image: linear-gradient(135deg, #2a1e3a, #171022);">
                         <span class="card-tag">Animación</span>
-                        <div class="card-overlay">
-                            <span class="card-overlay-icon">🔍</span>
-                            <span class="card-overlay-text">Ver proyecto</span>
-                        </div>
                     </div>
                     <h3 class="card-title">El Circulo BerSty</h3>
                     <p class="card-desc">Ciclo animado con estilo gráfico</p>
                 </article>
             </div>
 
-            <!-- SPOTLIGHT (ahora con más información) -->
-            <div class="spotlight" id="spotlight" role="region" aria-label="Detalle del proyecto">
+            <!-- SPOTLIGHT (case study) -->
+            <div class="spotlight reveal" id="spotlight" role="region" aria-label="Detalle del proyecto">
                 <div class="spotlight-inner">
-                    <div class="spotlight-image-main">
-                        <div class="spotlight-img-final" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
-                            <span class="spotlight-badge">Render final</span>
+                    <div class="spotlight-images">
+                        <div class="spotlight-img clay" style="background-image: linear-gradient(135deg, #2e2e2e, #1a1a1a);">
+                            <span>Blockout / Clay</span>
+                        </div>
+                        <div class="spotlight-img final" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
+                            <span>Render final</span>
                         </div>
                     </div>
                     <div class="spotlight-content">
                         <h3 class="spotlight-title">Forest</h3>
                         <p class="spotlight-desc">Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.</p>
-                        <div class="spotlight-meta">
-                            <span>⏱️ 6h render</span>
-                            <span>🛠️ Blender + Blockbench</span>
-                        </div>
                         <ul class="spotlight-tags">
                             <li>Blender</li>
                             <li>Blockbench</li>
                             <li>Cycles</li>
                         </ul>
-                        <a href="#" class="btn btn-primary btn-sm" target="_blank">Ver en Behance →</a>
+                        <a href="#" class="btn btn-primary btn-sm">Ver más</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ============================================================
-        ABOUT - CRAFTING TABLE
-        ============================================================ -->
+        <!-- CRAFTING TABLE (about) -->
         <section class="section" id="crafting">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Crafting Table</h2>
                 <p class="section-sub">Sobre mí</p>
             </div>
             <div class="about-grid">
-                <div class="about-text">
+                <div class="about-text reveal">
                     <p>Soy <strong>Ray 3D</strong>, artista 3D con base en Honduras. Especializado en <strong>render realista de ambientes Minecraft</strong> usando Blender, y en modelado low-poly con Blockbench.</p>
                     <p>He colaborado en proyectos como Forest, Pool, Hide and Seek y El Círculo BerSty, combinando narrativa visual y técnica para crear piezas inmersivas.</p>
                     <p class="about-tools">
@@ -213,7 +147,7 @@
                         <span class="tool">Photoshop</span>
                     </p>
                 </div>
-                <div class="about-process">
+                <div class="about-process reveal">
                     <h4>Cómo trabajo</h4>
                     <ul class="process-steps">
                         <li><span class="step-num">01</span> Brief</li>
@@ -225,11 +159,9 @@
             </div>
         </section>
 
-        <!-- ============================================================
-        SERVICES - COMMISSION BOARD
-        ============================================================ -->
+        <!-- COMMISSION BOARD (servicios) -->
         <section class="section" id="commission">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Commission Board</h2>
                 <p class="section-sub">Servicios y tarifas</p>
             </div>
@@ -267,15 +199,13 @@
             </div>
         </section>
 
-        <!-- ============================================================
-        CONTACT - NETHER PORTAL
-        ============================================================ -->
+        <!-- NETHER PORTAL (contacto) -->
         <section class="section" id="contact">
-            <div class="section-header">
+            <div class="section-header reveal">
                 <h2 class="section-title">Nether Portal</h2>
                 <p class="section-sub">Hablemos de tu proyecto</p>
             </div>
-            <form class="contact-form" id="contactForm" aria-label="Formulario de contacto">
+            <form class="contact-form reveal" id="contactForm" aria-label="Formulario de contacto">
                 <div class="form-group">
                     <label for="name">Nombre</label>
                     <input type="text" id="name" name="name" required placeholder="Ej. Alex" />
@@ -304,39 +234,6 @@
         </section>
     </main>
 
-    <!-- ============================================================
-    MODAL - IMAGEN AMPLIADA + BREAKDOWN
-    ============================================================ -->
-    <div class="modal" id="imageModal" role="dialog" aria-modal="true" aria-label="Vista ampliada de proyecto">
-        <div class="modal-overlay" id="modalOverlay"></div>
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose" aria-label="Cerrar modal">✕</button>
-            <div class="modal-body">
-                <div class="modal-image-container">
-                    <img src="" alt="Render final" id="modalImage" />
-                    <div class="modal-raw-overlay" id="modalRawOverlay">
-                        <img src="" alt="Render crudo (sin iluminación)" id="modalRawImage" />
-                    </div>
-                    <div class="modal-slider-handle" id="modalSliderHandle">
-                        <span class="modal-slider-line"></span>
-                        <span class="modal-slider-button">◀ ▶</span>
-                    </div>
-                </div>
-                <div class="modal-info">
-                    <h2 id="modalTitle">Título del proyecto</h2>
-                    <p id="modalDesc">Descripción detallada.</p>
-                    <div class="modal-actions">
-                        <button class="btn btn-secondary btn-sm" id="modalBreakdownBtn">🔍 Breakdown</button>
-                        <a href="#" class="btn btn-primary btn-sm" id="modalBehanceBtn" target="_blank">Ver en Behance</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================
-    FOOTER
-    ============================================================ -->
     <footer class="footer">
         <p>&copy; 2026 Ray 3D · Hecho con <span aria-hidden="true">❤</span> y bloques</p>
         <p class="footer-coords">
@@ -344,7 +241,6 @@
         </p>
     </footer>
 
-    <!-- JavaScript -->
     <script src="script.js" defer></script>
 </body>
 </html>
