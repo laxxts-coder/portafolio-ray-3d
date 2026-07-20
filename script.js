@@ -185,22 +185,14 @@
     }
 
     // ============================================================
-    // 0c. HERO — glow que sigue el cursor + tilt 3D del avatar
+    // 0c. HERO — tilt 3D del avatar al mover el mouse
     // ============================================================
     const heroSection = document.querySelector('.hero');
-    const heroGlow = document.querySelector('.hero-glow');
     const avatarSvg = document.querySelector('.hero-avatar-svg');
 
     if (heroSection && canHover && !prefersReducedMotion) {
         heroSection.addEventListener('mousemove', (e) => {
             const rect = heroSection.getBoundingClientRect();
-            const relX = ((e.clientX - rect.left) / rect.width) * 100;
-            const relY = ((e.clientY - rect.top) / rect.height) * 100;
-
-            if (heroGlow) {
-                heroGlow.style.setProperty('--gx', relX + '%');
-                heroGlow.style.setProperty('--gy', relY + '%');
-            }
             if (avatarSvg) {
                 const cx = (e.clientX - rect.left) / rect.width - 0.5;
                 const cy = (e.clientY - rect.top) / rect.height - 0.5;
@@ -209,6 +201,31 @@
         });
         heroSection.addEventListener('mouseleave', () => {
             if (avatarSvg) avatarSvg.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        });
+    }
+
+    // ============================================================
+    // 0c-bis. CURSOR GLOW GLOBAL — luz que sigue el cursor en TODA
+    // la página (fixed = nunca se corta ni se desalinea)
+    // ============================================================
+    if (canHover && !prefersReducedMotion) {
+        const cursorGlow = document.createElement('div');
+        cursorGlow.className = 'cursor-glow';
+        cursorGlow.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(cursorGlow);
+
+        let glowRAF = null;
+        window.addEventListener('mousemove', (e) => {
+            if (glowRAF) return;
+            glowRAF = requestAnimationFrame(() => {
+                cursorGlow.style.setProperty('--cx', e.clientX + 'px');
+                cursorGlow.style.setProperty('--cy', e.clientY + 'px');
+                cursorGlow.classList.add('active');
+                glowRAF = null;
+            });
+        });
+        document.addEventListener('mouseleave', () => {
+            cursorGlow.classList.remove('active');
         });
     }
 
@@ -293,7 +310,9 @@
         const spotlightTags = spotlight.querySelector('.spotlight-tags');
         const clayImg = spotlight.querySelector('.clay');
         const finalImg = spotlight.querySelector('.final');
-        const verMasBtn = spotlight.querySelector('.btn');
+        const verMasBtn = document.getElementById('verMasBtn');
+        const portfolioCards = document.querySelectorAll('.portfolio-card');
+        let currentSpotlightKey = null;
 
         // Data de proyectos (simulada, reemplazar con datos reales)
         const projectsData = {
@@ -336,6 +355,11 @@
             const data = projectsData[projectKey];
             if (!data) return;
 
+            currentSpotlightKey = projectKey;
+            portfolioCards.forEach((c) => {
+                c.classList.toggle('is-active', c.dataset.project === projectKey);
+            });
+
             // Aplicar fade a los textos
             spotlightTitle.style.opacity = '0';
             spotlightDesc.style.opacity = '0';
@@ -362,7 +386,6 @@
         }
 
         // Escuchar clics en las cards del portafolio
-        const portfolioCards = document.querySelectorAll('.portfolio-card');
         portfolioCards.forEach((card) => {
             const project = card.dataset.project;
             if (project) {
@@ -383,6 +406,124 @@
         if (portfolioCards.length > 0) {
             const firstProject = portfolioCards[0].dataset.project;
             if (firstProject) updateSpotlight(firstProject);
+        }
+
+        // ============================================================
+        // 3b. MODAL — vista grande del proyecto + slider de breakdown
+        // ============================================================
+        const modal = document.getElementById('projectModal');
+        if (modal) {
+            const modalPanel = modal.querySelector('.project-modal-panel');
+            const modalTitleEl = modal.querySelector('.modal-title');
+            const modalDescEl = modal.querySelector('.modal-desc');
+            const modalTagsEl = modal.querySelector('.modal-tags');
+            const modalFinalView = modal.querySelector('.modal-final-view');
+            const compareSliderEl = modal.querySelector('.compare-slider');
+            const compareBeforeEl = modal.querySelector('.compare-before');
+            const compareAfterEl = modal.querySelector('.compare-after');
+            const compareHandle = modal.querySelector('.compare-handle');
+            const breakdownBtn = modal.querySelector('.modal-breakdown-btn');
+            let lastFocused = null;
+
+            function setSplit(percent) {
+                const clamped = Math.max(0, Math.min(100, percent));
+                compareSliderEl.style.setProperty('--split', clamped + '%');
+                compareHandle.setAttribute('aria-valuenow', String(Math.round(clamped)));
+            }
+
+            function onKeydown(e) {
+                if (e.key === 'Escape') closeModal();
+            }
+
+            function openModal(projectKey) {
+                const data = projectsData[projectKey];
+                if (!data) return;
+
+                lastFocused = document.activeElement;
+
+                modalTitleEl.textContent = data.title;
+                modalDescEl.textContent = data.desc;
+                modalTagsEl.innerHTML = data.tags.map((t) => `<li>${t}</li>`).join('');
+                modalFinalView.style.backgroundImage = data.final;
+                compareBeforeEl.style.backgroundImage = data.clay;
+                compareAfterEl.style.backgroundImage = data.final;
+
+                modal.classList.remove('showing-breakdown');
+                setSplit(50);
+                breakdownBtn.textContent = 'Ver Breakdown';
+
+                modal.classList.add('open');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('no-scroll');
+                document.addEventListener('keydown', onKeydown);
+
+                // Foco al panel para accesibilidad (lector de pantalla / teclado)
+                requestAnimationFrame(() => modalPanel.focus());
+            }
+
+            function closeModal() {
+                modal.classList.remove('open');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('no-scroll');
+                document.removeEventListener('keydown', onKeydown);
+                if (lastFocused && typeof lastFocused.focus === 'function') {
+                    lastFocused.focus();
+                }
+            }
+
+            modal.querySelectorAll('[data-modal-close]').forEach((el) => {
+                el.addEventListener('click', closeModal);
+            });
+
+            breakdownBtn.addEventListener('click', () => {
+                const isShowing = modal.classList.toggle('showing-breakdown');
+                breakdownBtn.textContent = isShowing ? 'Ocultar breakdown' : 'Ver Breakdown';
+            });
+
+            // El botón "Ver más" del spotlight abre el modal del proyecto activo
+            if (verMasBtn) {
+                verMasBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (currentSpotlightKey) openModal(currentSpotlightKey);
+                });
+            }
+
+            // --- Slider de comparación (arrastrar para ver antes/después) ---
+            function splitFromClientX(clientX) {
+                const rect = compareSliderEl.getBoundingClientRect();
+                const percent = ((clientX - rect.left) / rect.width) * 100;
+                setSplit(percent);
+            }
+
+            let dragging = false;
+
+            compareHandle.addEventListener('pointerdown', (e) => {
+                dragging = true;
+                compareHandle.setPointerCapture(e.pointerId);
+            });
+            compareSliderEl.addEventListener('pointerdown', (e) => {
+                if (compareHandle.contains(e.target)) return;
+                splitFromClientX(e.clientX);
+                dragging = true;
+            });
+            window.addEventListener('pointermove', (e) => {
+                if (!dragging) return;
+                splitFromClientX(e.clientX);
+            });
+            window.addEventListener('pointerup', () => {
+                dragging = false;
+            });
+
+            compareHandle.addEventListener('keydown', (e) => {
+                const current = parseFloat(compareSliderEl.style.getPropertyValue('--split')) || 50;
+                if (e.key === 'ArrowLeft') {
+                    setSplit(current - 5);
+                    e.preventDefault();
+                } else if (e.key === 'ArrowRight') {
+                    setSplit(current + 5);
+                    e.preventDefault();
+                }
+            });
         }
     }
 
