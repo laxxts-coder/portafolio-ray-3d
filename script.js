@@ -478,13 +478,24 @@
         history.replaceState(null, '', window.location.pathname + window.location.search);
     }
     window.scrollTo(0, 0);
-})();
-// Forzar visibilidad de las cards al hacer clic en "Ver builds"
-document.querySelector('.hero-cta a[href="#build"]')?.addEventListener('click', () => {
-    // Dar un pequeño retraso para que el scroll se complete
-    setTimeout(() => {
-        document.querySelectorAll('#build .card.reveal').forEach(card => {
-            card.classList.add('visible');
+
+        // ============================================================
+    // 8. FORZAR VISIBILIDAD DE LAS CARDS AL HACER CLIC EN "VER BUILDS"
+    // ============================================================
+    const verBuildsBtn = document.querySelector('.hero-cta a[href="#build"]');
+    if (verBuildsBtn) {
+        verBuildsBtn.addEventListener('click', function(e) {
+            // No prevenimos el comportamiento normal (el scroll suave debe ocurrir)
+            // Pero después de un breve retraso, forzamos que las cards se vuelvan visibles
+            setTimeout(() => {
+                document.querySelectorAll('#build .card.reveal').forEach(card => {
+                    card.classList.add('visible');
+                });
+                // También forzamos el header de la sección
+                const header = document.querySelector('#build .section-header.reveal');
+                if (header) header.classList.add('visible');
+            }, 400); // Esperamos a que el scroll suave termine (~400ms)
         });
-    }, 300);
-});
+    }
+})();
+
