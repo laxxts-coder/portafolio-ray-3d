@@ -284,8 +284,8 @@
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg', // ← url(assets/proyectos/forest-clay.jpg)
-                final: 'url(assets/forest.jpg', // ← url(assets/proyectos/forest-final.jpg)
+                clay: 'url(assets/forest-raw.jpg'), // ← url(assets/proyectos/forest-clay.jpg)
+                final: 'url(assets/forest.jpg'), // ← url(assets/proyectos/forest-final.jpg)
             },
             pool: {
                 title: 'Pool',
@@ -406,7 +406,6 @@
             const project = card.dataset.project;
             if (project) {
                 card.addEventListener('click', (e) => {
-                    // Si el clic fue en el botón, no hacer doble apertura
                     if (e.target.classList.contains('card-btn')) return;
                     openModal(project);
                 });
@@ -424,7 +423,7 @@
             const project = btn.dataset.project;
             if (project) {
                 btn.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Evita que el clic en el botón también dispare el evento de la card
+                    e.stopPropagation();
                     openModal(project);
                 });
             }
@@ -473,7 +472,7 @@
     }
 
     // ============================================================
-    // 7. ENFOQUE AL INICIO
+    // 7. ENFOQUE AL INICIO (siempre arriba)
     // ============================================================
     if (window.location.hash) {
         history.replaceState(null, '', window.location.pathname + window.location.search);
