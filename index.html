@@ -94,71 +94,104 @@
         </section>
 
         <!-- ============================================================
-        PORTFOLIO
+        PORTFOLIO - THE BUILD SITE
         ============================================================ -->
         <section class="section" id="build">
             <div class="section-header">
                 <h2 class="section-title">The Build Site</h2>
                 <p class="section-sub">Proyectos destacados</p>
             </div>
-            <div class="grid portfolio-grid">
-                <article class="card portfolio-card reveal" data-project="forest" role="button" tabindex="0" aria-label="Abrir caso de estudio: Forest">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #2d3a2a, #1a2218);">
+
+            <!-- FILTROS -->
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="ambiente">Ambientes</button>
+                <button class="filter-btn" data-filter="modelado">Modelado</button>
+                <button class="filter-btn" data-filter="animacion">Animación</button>
+            </div>
+
+            <div class="grid portfolio-grid" id="portfolioGrid">
+                <!-- Forest -->
+                <article class="card portfolio-card reveal" data-project="forest" data-category="ambiente" role="button" tabindex="0">
+                    <div class="card-image" style="background-image: url('assets/forest-thumb.jpg'), linear-gradient(135deg, #2d3a2a, #1a2218);">
                         <span class="card-tag">Ambiente</span>
+                        <div class="card-overlay">
+                            <span class="card-overlay-icon">🔍</span>
+                            <span class="card-overlay-text">Ver proyecto</span>
+                        </div>
                     </div>
                     <h3 class="card-title">Forest</h3>
                     <p class="card-desc">Render realista de bosque oscuro</p>
                 </article>
-                <article class="card portfolio-card reveal" data-project="pool" role="button" tabindex="0" aria-label="Abrir caso de estudio: Pool">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #1e3a4a, #0f222b);">
+
+                <!-- Pool -->
+                <article class="card portfolio-card reveal" data-project="pool" data-category="ambiente" role="button" tabindex="0">
+                    <div class="card-image" style="background-image: url('assets/pool-thumb.jpg'), linear-gradient(135deg, #1e3a4a, #0f222b);">
                         <span class="card-tag">Ambiente</span>
+                        <div class="card-overlay">
+                            <span class="card-overlay-icon">🔍</span>
+                            <span class="card-overlay-text">Ver proyecto</span>
+                        </div>
                     </div>
                     <h3 class="card-title">Pool</h3>
                     <p class="card-desc">Piscina con iluminación volumétrica</p>
                 </article>
-                <article class="card portfolio-card reveal" data-project="hide" role="button" tabindex="0" aria-label="Abrir caso de estudio: Hide and Seek">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
+
+                <!-- Hide and Seek -->
+                <article class="card portfolio-card reveal" data-project="hide" data-category="modelado" role="button" tabindex="0">
+                    <div class="card-image" style="background-image: url('assets/hide-thumb.jpg'), linear-gradient(135deg, #3d2a1a, #221510);">
                         <span class="card-tag">Modelado</span>
+                        <div class="card-overlay">
+                            <span class="card-overlay-icon">🔍</span>
+                            <span class="card-overlay-text">Ver proyecto</span>
+                        </div>
                     </div>
                     <h3 class="card-title">Hide and Seek</h3>
                     <p class="card-desc">Escena de persecución en Blockbench</p>
                 </article>
-                <article class="card portfolio-card reveal" data-project="circle" role="button" tabindex="0" aria-label="Abrir caso de estudio: El Circulo BerSty">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #2a1e3a, #171022);">
+
+                <!-- El Circulo BerSty -->
+                <article class="card portfolio-card reveal" data-project="circle" data-category="animacion" role="button" tabindex="0">
+                    <div class="card-image" style="background-image: url('assets/circle-thumb.jpg'), linear-gradient(135deg, #2a1e3a, #171022);">
                         <span class="card-tag">Animación</span>
+                        <div class="card-overlay">
+                            <span class="card-overlay-icon">🔍</span>
+                            <span class="card-overlay-text">Ver proyecto</span>
+                        </div>
                     </div>
                     <h3 class="card-title">El Circulo BerSty</h3>
                     <p class="card-desc">Ciclo animado con estilo gráfico</p>
                 </article>
             </div>
 
-            <!-- SPOTLIGHT -->
+            <!-- SPOTLIGHT (mejorado) -->
             <div class="spotlight" id="spotlight" role="region" aria-label="Detalle del proyecto">
                 <div class="spotlight-inner">
-                    <div class="spotlight-images">
-                        <div class="spotlight-img clay" style="background-image: linear-gradient(135deg, #2e2e2e, #1a1a1a);">
-                            <span>Blockout / Clay</span>
-                        </div>
-                        <div class="spotlight-img final" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
-                            <span>Render final</span>
+                    <div class="spotlight-image-main">
+                        <div class="spotlight-img-final" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
+                            <span class="spotlight-badge">Render final</span>
                         </div>
                     </div>
                     <div class="spotlight-content">
                         <h3 class="spotlight-title">Forest</h3>
                         <p class="spotlight-desc">Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.</p>
+                        <div class="spotlight-meta">
+                            <span>⏱️ 6h render</span>
+                            <span>🛠️ Blender + Blockbench</span>
+                        </div>
                         <ul class="spotlight-tags">
                             <li>Blender</li>
                             <li>Blockbench</li>
                             <li>Cycles</li>
                         </ul>
-                        <a href="#" class="btn btn-primary btn-sm">Ver más</a>
+                        <a href="#" class="btn btn-primary btn-sm" target="_blank">Ver en Behance →</a>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- ============================================================
-        ABOUT
+        ABOUT - CRAFTING TABLE
         ============================================================ -->
         <section class="section" id="crafting">
             <div class="section-header">
@@ -189,7 +222,7 @@
         </section>
 
         <!-- ============================================================
-        SERVICES
+        SERVICES - COMMISSION BOARD
         ============================================================ -->
         <section class="section" id="commission">
             <div class="section-header">
@@ -231,7 +264,7 @@
         </section>
 
         <!-- ============================================================
-        CONTACT
+        CONTACT - NETHER PORTAL
         ============================================================ -->
         <section class="section" id="contact">
             <div class="section-header">
