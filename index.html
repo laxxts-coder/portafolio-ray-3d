@@ -1,246 +1,981 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Portafolio profesional de Ray 3D – Arte 3D, renders realistas de Minecraft y modelado Blockbench." />
-    <meta property="og:title" content="Ray 3D – Portafolio 3D" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://laxxts-coder.github.io/PortafolioRay3D/" />
-    <meta property="og:image" content="https://laxxts-coder.github.io/PortafolioRay3D/assets/og-image.jpg" />
-    <meta name="theme-color" content="#15161A" />
-    <title>Ray 3D · Portafolio</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23B08D57' rx='4'/></svg>" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <!-- Loadbar (generando chunk) -->
-    <div class="loadbar" role="progressbar" aria-label="Cargando portafolio" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+:root {
+    --bg-primary: #15161A;
+    --bg-secondary: #1C1E23;
+    --bg-card: #24272C;
+    --bg-card-hover: #2C2F36;
+    --text-primary: #ECE7DA;
+    --text-secondary: #A8A49A;
+    --accent: #B08D57;
+    --accent-dark: #8C6E42;
+    --accent-light: #D4B482;
+    --border-light: #3A3C42;
+    --border-dark: #0F1013;
+    --font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --transition: cubic-bezier(0.23, 1, 0.32, 1);
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.6);
+    --radius-card: 0;
+    /* sin border-radius, usamos chamfer en los elementos */
+}
 
-    <!-- FONDO DINÁMICO (voxels ambientales) -->
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
-    <div class="bg-vignette" aria-hidden="true"></div>
+html {
+    scroll-behavior: smooth;
+    background: var(--bg-primary);
+}
 
-    <!-- NAV -->
-    <header class="nav" role="navigation" aria-label="Navegación principal">
-        <div class="nav-inner">
-            <a href="#" class="logo" aria-label="Inicio">RAY 3D</a>
-            <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="nav-links" role="menubar">
-                <li role="none"><a href="#build" role="menuitem">The Build Site</a></li>
-                <li role="none"><a href="#crafting" role="menuitem">Crafting Table</a></li>
-                <li role="none"><a href="#commission" role="menuitem">Commission Board</a></li>
-                <li role="none"><a href="#contact" role="menuitem">Nether Portal</a></li>
-            </ul>
-        </div>
-    </header>
+body {
+    font-family: var(--font-body);
+    background: transparent;
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+}
 
-    <main>
-        <!-- SPAWN / HERO -->
-        <section class="hero" id="spawn">
-            <div class="hero-glow" aria-hidden="true"></div>
-            <div class="hero-content">
-                <div class="hero-avatar hero-anim" style="--d:0ms" aria-hidden="true">
-                    <div class="hero-avatar-float">
-                        <svg class="hero-avatar-svg" viewBox="0 0 64 64" width="80" height="80">
-                            <rect x="8" y="8" width="48" height="48" fill="#B08D57" rx="4" />
-                            <rect x="16" y="16" width="12" height="12" fill="#2C2F33" />
-                            <rect x="36" y="16" width="12" height="12" fill="#2C2F33" />
-                            <rect x="24" y="36" width="16" height="12" fill="#2C2F33" />
-                            <rect x="16" y="48" width="8" height="8" fill="#1E1F23" />
-                            <rect x="40" y="48" width="8" height="8" fill="#1E1F23" />
-                        </svg>
-                    </div>
-                </div>
-                <h1 class="hero-title hero-anim" style="--d:80ms">Ray 3D</h1>
-                <p class="hero-sub hero-anim" style="--d:150ms">Render realista &amp; modelado 3D</p>
-                <p class="hero-desc hero-anim" style="--d:220ms">Ambientes Minecraft · Blockbench · Blender</p>
-                <div class="hero-cta hero-anim" style="--d:290ms">
-                    <a href="#build" class="btn btn-primary">Ver builds</a>
-                    <a href="#contact" class="btn btn-secondary">Contactar</a>
-                </div>
-            </div>
-        </section>
+/* ============================================================
+   FONDO DINÁMICO (voxels ambientales + viñeta)
+   ============================================================ */
+#bg-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    pointer-events: none;
+    display: block;
+}
 
-        <!-- THE BUILD SITE (portafolio) -->
-        <section class="section" id="build">
-            <div class="section-header reveal">
-                <h2 class="section-title">The Build Site</h2>
-                <p class="section-sub">Proyectos destacados</p>
-            </div>
-            <div class="grid portfolio-grid">
-                <article class="card portfolio-card reveal" data-project="forest" role="button" tabindex="0" aria-label="Abrir caso de estudio: Forest">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #2d3a2a, #1a2218);">
-                        <span class="card-tag">Ambiente</span>
-                    </div>
-                    <h3 class="card-title">Forest</h3>
-                    <p class="card-desc">Render realista de bosque oscuro</p>
-                </article>
-                <article class="card portfolio-card reveal" data-project="pool" role="button" tabindex="0" aria-label="Abrir caso de estudio: Pool">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #1e3a4a, #0f222b);">
-                        <span class="card-tag">Ambiente</span>
-                    </div>
-                    <h3 class="card-title">Pool</h3>
-                    <p class="card-desc">Piscina con iluminación volumétrica</p>
-                </article>
-                <article class="card portfolio-card reveal" data-project="hide" role="button" tabindex="0" aria-label="Abrir caso de estudio: Hide and Seek">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
-                        <span class="card-tag">Modelado</span>
-                    </div>
-                    <h3 class="card-title">Hide and Seek</h3>
-                    <p class="card-desc">Escena de persecución en Blockbench</p>
-                </article>
-                <article class="card portfolio-card reveal" data-project="circle" role="button" tabindex="0" aria-label="Abrir caso de estudio: El Circulo BerSty">
-                    <div class="card-image" style="background-image: linear-gradient(135deg, #2a1e3a, #171022);">
-                        <span class="card-tag">Animación</span>
-                    </div>
-                    <h3 class="card-title">El Circulo BerSty</h3>
-                    <p class="card-desc">Ciclo animado con estilo gráfico</p>
-                </article>
-            </div>
+.bg-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 900px 500px at 50% 0%, rgba(21, 22, 26, 0) 0%, rgba(21, 22, 26, 0.75) 75%),
+        linear-gradient(to bottom, rgba(21, 22, 26, 0.15) 0%, rgba(21, 22, 26, 0.55) 45%, var(--bg-primary) 92%);
+}
 
-            <!-- SPOTLIGHT (case study) -->
-            <div class="spotlight reveal" id="spotlight" role="region" aria-label="Detalle del proyecto">
-                <div class="spotlight-inner">
-                    <div class="spotlight-images">
-                        <div class="spotlight-img clay" style="background-image: linear-gradient(135deg, #2e2e2e, #1a1a1a);">
-                            <span>Blockout / Clay</span>
-                        </div>
-                        <div class="spotlight-img final" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
-                            <span>Render final</span>
-                        </div>
-                    </div>
-                    <div class="spotlight-content">
-                        <h3 class="spotlight-title">Forest</h3>
-                        <p class="spotlight-desc">Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.</p>
-                        <ul class="spotlight-tags">
-                            <li>Blender</li>
-                            <li>Blockbench</li>
-                            <li>Cycles</li>
-                        </ul>
-                        <a href="#" class="btn btn-primary btn-sm">Ver más</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.15s var(--transition);
+}
 
-        <!-- CRAFTING TABLE (about) -->
-        <section class="section" id="crafting">
-            <div class="section-header reveal">
-                <h2 class="section-title">Crafting Table</h2>
-                <p class="section-sub">Sobre mí</p>
-            </div>
-            <div class="about-grid">
-                <div class="about-text reveal">
-                    <p>Soy <strong>Ray 3D</strong>, artista 3D con base en Honduras. Especializado en <strong>render realista de ambientes Minecraft</strong> usando Blender, y en modelado low-poly con Blockbench.</p>
-                    <p>He colaborado en proyectos como Forest, Pool, Hide and Seek y El Círculo BerSty, combinando narrativa visual y técnica para crear piezas inmersivas.</p>
-                    <p class="about-tools">
-                        <span class="tool">Blender</span>
-                        <span class="tool">Blockbench</span>
-                        <span class="tool">Cycles</span>
-                        <span class="tool">Photoshop</span>
-                    </p>
-                </div>
-                <div class="about-process reveal">
-                    <h4>Cómo trabajo</h4>
-                    <ul class="process-steps">
-                        <li><span class="step-num">01</span> Brief</li>
-                        <li><span class="step-num">02</span> Blockout (Blockbench)</li>
-                        <li><span class="step-num">03</span> Iluminación (Blender)</li>
-                        <li><span class="step-num">04</span> Render final</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+a:hover {
+    color: var(--accent-light);
+}
 
-        <!-- COMMISSION BOARD (servicios) -->
-        <section class="section" id="commission">
-            <div class="section-header reveal">
-                <h2 class="section-title">Commission Board</h2>
-                <p class="section-sub">Servicios y tarifas</p>
-            </div>
-            <div class="grid service-grid">
-                <div class="card service-card reveal">
-                    <h3 class="card-title">Ambientes</h3>
-                    <p class="card-price">$20</p>
-                    <p class="card-desc">Render realista de paisajes, interiores o escenas temáticas.</p>
-                    <ul class="service-features">
-                        <li>Iluminación dinámica</li>
-                        <li>Texturizado completo</li>
-                        <li>Entrega en 48h</li>
-                    </ul>
-                </div>
-                <div class="card service-card reveal">
-                    <h3 class="card-title">Blockbench</h3>
-                    <p class="card-price">$12</p>
-                    <p class="card-desc">Modelado low-poly estilo Minecraft para personajes, criaturas u objetos.</p>
-                    <ul class="service-features">
-                        <li>Modelo base + textura</li>
-                        <li>Rigging básico</li>
-                        <li>Entrega en 24h</li>
-                    </ul>
-                </div>
-                <div class="card service-card reveal">
-                    <h3 class="card-title">Animación</h3>
-                    <p class="card-price">$25+</p>
-                    <p class="card-desc">Ciclos animados o secuencias cortas con estilo Minecraft.</p>
-                    <ul class="service-features">
-                        <li>Storyboard previo</li>
-                        <li>Render en 1080p</li>
-                        <li>Revisiones incluidas</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+img,
+svg {
+    display: block;
+}
 
-        <!-- NETHER PORTAL (contacto) -->
-        <section class="section" id="contact">
-            <div class="section-header reveal">
-                <h2 class="section-title">Nether Portal</h2>
-                <p class="section-sub">Hablemos de tu proyecto</p>
-            </div>
-            <form class="contact-form reveal" id="contactForm" aria-label="Formulario de contacto">
-                <div class="form-group">
-                    <label for="name">Nombre</label>
-                    <input type="text" id="name" name="name" required placeholder="Ej. Alex" />
-                </div>
-                <div class="form-group">
-                    <label for="commissionType">Tipo de encargo</label>
-                    <select id="commissionType" name="commissionType" required>
-                        <option value="">Selecciona...</option>
-                        <option value="ambiente">Ambiente</option>
-                        <option value="blockbench">Blockbench</option>
-                        <option value="animacion">Animación</option>
-                        <option value="otro">Otro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="reference">Referencia (opcional)</label>
-                    <input type="url" id="reference" name="reference" placeholder="https://..." />
-                </div>
-                <div class="form-group">
-                    <label for="message">Mensaje</label>
-                    <textarea id="message" name="message" rows="4" required placeholder="Cuéntame tu idea..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Enviar mensaje</button>
-                <div class="form-feedback" aria-live="polite"></div>
-            </form>
-        </section>
-    </main>
+/* ============================================================
+   LOADBAR (generando chunk)
+   ============================================================ */
+.loadbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--bg-secondary);
+    transform: scaleX(0);
+    transform-origin: left center;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.4s var(--transition);
+}
 
-    <footer class="footer">
-        <p>&copy; 2026 Ray 3D · Hecho con <span aria-hidden="true">❤</span> y bloques</p>
-        <p class="footer-coords">
-            <span>X: 0</span> <span>Y: 64</span> <span>Z: 0</span>
-        </p>
-    </footer>
+.loadbar.done {
+    opacity: 0;
+    transform: scaleX(1);
+}
 
-    <script src="script.js" defer></script>
-</body>
-</html>
+.loadbar .bar-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1.2s var(--transition);
+}
+
+.loadbar.done .bar-fill {
+    transform: scaleX(1);
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+    padding: 20px 0 16px;
+    border-bottom: 1px solid transparent;
+    margin-bottom: 40px;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: transparent;
+    transition: background 0.35s var(--transition), border-color 0.35s var(--transition),
+        box-shadow 0.35s var(--transition), padding 0.25s var(--transition);
+}
+
+.nav.scrolled {
+    padding: 12px 20px;
+    margin-left: -20px;
+    margin-right: -20px;
+    width: calc(100% + 40px);
+    background: rgba(21, 22, 26, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom-color: var(--border-light);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+}
+
+.logo:hover {
+    color: var(--text-primary);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 28px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    position: relative;
+    padding: 4px 0;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.2s var(--transition);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+}
+
+.nav-links a:hover {
+    color: var(--text-primary);
+}
+
+.nav-links a.active {
+    color: var(--text-primary);
+}
+
+.nav-links a.active::after {
+    width: 100%;
+    background: var(--accent-light);
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: all 0.2s var(--transition);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+    padding: 32px 0 60px;
+    text-align: center;
+    position: relative;
+}
+
+.hero-glow {
+    position: absolute;
+    inset: -20% -10%;
+    background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 20%), rgba(176, 141, 87, 0.16), transparent 62%);
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.4s var(--transition);
+}
+
+.hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-avatar {
+    display: inline-block;
+    margin-bottom: 20px;
+    perspective: 700px;
+}
+
+.hero-avatar-float {
+    animation: heroFloat 4.2s ease-in-out infinite;
+}
+
+.hero-avatar-svg {
+    display: block;
+    transition: transform 0.25s var(--transition);
+    transform-style: preserve-3d;
+    will-change: transform;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes heroFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
+}
+
+/* Entrada escalonada de los elementos del hero */
+.hero-anim {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: heroIn 0.7s var(--transition) forwards;
+    animation-delay: var(--d, 0ms);
+}
+
+@keyframes heroIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+}
+
+.hero-sub {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+.hero-desc {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 32px;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   BOTONES (estilo Minecraft biselado)
+   ============================================================ */
+.btn {
+    display: inline-block;
+    padding: 10px 28px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    box-shadow:
+        inset -2px -2px 0 var(--border-dark),
+        inset 2px 2px 0 var(--border-light),
+        0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: transform 0.08s var(--transition), box-shadow 0.15s var(--transition);
+    text-align: center;
+    position: relative;
+    border-radius: 0;
+    /* esquinas rectas, el bisel da la sensación Minecraft */
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+    transform: translateX(-130%);
+    pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover::after {
+        transform: translateX(130%);
+        transition: transform 0.55s var(--transition);
+    }
+}
+
+.btn:active {
+    transform: translateY(2px);
+    box-shadow:
+        inset -1px -1px 0 var(--border-dark),
+        inset 1px 1px 0 var(--border-light),
+        0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #15161A;
+    box-shadow:
+        inset -2px -2px 0 var(--accent-dark),
+        inset 2px 2px 0 var(--accent-light),
+        0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.btn-primary:active {
+    box-shadow:
+        inset -1px -1px 0 var(--accent-dark),
+        inset 1px 1px 0 var(--accent-light),
+        0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    box-shadow:
+        inset -2px -2px 0 var(--border-dark),
+        inset 2px 2px 0 var(--border-light),
+        0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary:active {
+    box-shadow:
+        inset -1px -1px 0 var(--border-dark),
+        inset 1px 1px 0 var(--border-light),
+        0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.btn-sm {
+    padding: 6px 18px;
+    font-size: 0.8rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover {
+        filter: brightness(1.08);
+    }
+    .btn-primary:hover {
+        filter: brightness(1.05);
+    }
+}
+
+/* ============================================================
+   SECCIONES
+   ============================================================ */
+.section {
+    padding: 48px 0 60px;
+    border-top: 1px solid var(--border-light);
+}
+
+.section:first-of-type {
+    border-top: none;
+}
+
+.section-header {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    height: 3px;
+    width: 0;
+    background: var(--accent);
+    margin-top: 8px;
+    transition: width 0.7s var(--transition) 0.1s;
+}
+
+.section-header.visible .section-title::after {
+    width: 56px;
+}
+
+.section-sub {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+}
+
+/* ============================================================
+   GRIDS
+   ============================================================ */
+.grid {
+    display: grid;
+    gap: 24px;
+}
+
+.portfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.service-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+/* ============================================================
+   CARDS (con chamfer en una esquina)
+   ============================================================ */
+.card {
+    background: var(--bg-card);
+    padding: 20px 20px 24px;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.25s var(--transition), box-shadow 0.25s var(--transition), background 0.15s var(--transition);
+    position: relative;
+    border: 1px solid var(--border-light);
+    /* Chamfer sutil en esquina superior izquierda */
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
+    --mx: 50%;
+    --my: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    transform: perspective(800px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(0) translateZ(0);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: radial-gradient(220px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.07), transparent 62%);
+    opacity: 0;
+    transition: opacity 0.25s var(--transition);
+    pointer-events: none;
+}
+
+.card-image {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    margin: -20px -20px 16px -20px;
+    position: relative;
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.card-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 2px 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--border-light);
+    box-shadow: inset -1px -1px 0 var(--border-dark), inset 1px 1px 0 var(--border-light);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.card-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.card-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 8px 0 4px;
+}
+
+.service-features {
+    list-style: none;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.service-features li {
+    padding: 2px 0;
+    padding-left: 16px;
+    position: relative;
+}
+
+.service-features li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 0.6rem;
+    top: 6px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .card:hover {
+        background: var(--bg-card-hover);
+        transform: perspective(800px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(-4px) translateZ(0);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .card:hover::before {
+        opacity: 1;
+    }
+    .portfolio-card {
+        cursor: pointer;
+    }
+}
+
+/* ============================================================
+   SPOTLIGHT (case study)
+   ============================================================ */
+.spotlight {
+    margin-top: 40px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
+    overflow: hidden;
+    transition: opacity 0.3s var(--transition);
+}
+
+.spotlight-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 24px;
+}
+
+.spotlight-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.spotlight-img {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
+    transition: transform 0.35s var(--transition), filter 0.35s var(--transition);
+}
+
+.spotlight-img.switching {
+    transform: scale(0.95);
+    filter: brightness(0.65);
+}
+
+.spotlight-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.spotlight-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    transition: opacity 0.15s var(--transition);
+}
+
+.spotlight-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+    transition: opacity 0.15s var(--transition);
+}
+
+.spotlight-tags {
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.spotlight-tags li {
+    background: var(--bg-primary);
+    padding: 2px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.spotlight .btn {
+    align-self: flex-start;
+}
+
+/* ============================================================
+   ABOUT / CRAFTING TABLE
+   ============================================================ */
+.about-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.about-text p {
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+    max-width: 600px;
+}
+
+.about-text strong {
+    color: var(--text-primary);
+}
+
+.about-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tool {
+    background: var(--bg-card);
+    padding: 4px 16px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.about-process h4 {
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.process-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.process-steps li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.step-num {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-weight: 400;
+    font-size: 0.8rem;
+    min-width: 28px;
+}
+
+/* ============================================================
+   CONTACTO
+   ============================================================ */
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
+    transition: border-color 0.15s var(--transition);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-feedback {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    color: var(--accent);
+    min-height: 24px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+    padding: 32px 0 40px;
+    border-top: 1px solid var(--border-light);
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.footer-coords {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    display: flex;
+    gap: 16px;
+}
+
+.footer-coords span {
+    opacity: 0.6;
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.48s var(--transition), transform 0.48s var(--transition);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger para cards dentro de grid */
+.portfolio-grid .card.reveal.visible {
+    transition-delay: calc(var(--index, 0) * 40ms);
+}
+.service-grid .card.reveal.visible {
+    transition-delay: calc(var(--index, 0) * 40ms);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .loadbar {
+        transition: none;
+        transform: none;
+        opacity: 0;
+    }
+    .loadbar .bar-fill {
+        transition: none;
+        transform: none;
+    }
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .card {
+        transition: none;
+        transform: none !important;
+    }
+    .btn {
+        transition: none;
+    }
+    .btn:active {
+        transform: none;
+    }
+    .btn::after {
+        display: none;
+    }
+    .spotlight-title,
+    .spotlight-desc {
+        transition: none;
+    }
+    .hero-anim {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+    .hero-avatar-float {
+        animation: none;
+    }
+    .hero-avatar-svg {
+        transition: none;
+        transform: none !important;
+    }
+    .hero-glow {
+        display: none;
+    }
+    .nav {
+        transition: none;
+    }
+    .section-title::after {
+        transition: none;
+    }
+    #bg-canvas {
+        display: none;
+    }
+    .spotlight-img {
+        transition: none;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--bg-secondary);
+        padding: 20px 24px;
+        position: absolute;
+        top: 64px;
+        left: 20px;
+        right: 20px;
+        border: 1px solid var(--border-light);
+        clip-path: polygon(0 6px, 6px 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .spotlight-inner {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+    .spotlight-images {
+        grid-template-columns: 1fr 1fr;
+    }
+    .spotlight-img {
+        height: 100px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .portfolio-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    .service-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    .hero-cta {
+        flex-direction: column;
+        align-items: center;
+    }
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+    .service-grid {
+        grid-template-columns: 1fr;
+    }
+    .spotlight-images {
+        grid-template-columns: 1fr;
+    }
+}
