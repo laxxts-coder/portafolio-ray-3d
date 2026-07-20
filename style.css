@@ -58,7 +58,7 @@ body {
 }
 
 /* ============================================================
-   BLOQUES FLOTANTES (fondo)
+   BLOQUES FLOTANTES
    ============================================================ */
 .floating-blocks {
     position: fixed;
@@ -170,7 +170,7 @@ body {
 }
 
 /* ============================================================
-   SCROLL PROGRESS BAR
+   SCROLL PROGRESS
    ============================================================ */
 .scroll-progress {
     position: fixed;
@@ -362,8 +362,6 @@ body {
     align-items: center;
     justify-content: center;
 }
-
-/* Gradiente animado de fondo en hero */
 .hero::before {
     content: '';
     position: absolute;
@@ -401,13 +399,11 @@ body {
     position: relative;
     z-index: 2;
 }
-
 .hero-avatar {
     display: inline-block;
     margin-bottom: 20px;
     animation: floatAvatar 4s ease-in-out infinite;
 }
-
 @keyframes floatAvatar {
     0%,
     100% {
@@ -417,11 +413,9 @@ body {
         transform: translateY(-12px);
     }
 }
-
 .hero-avatar svg {
     filter: drop-shadow(0 0 30px rgba(176, 141, 87, 0.3));
 }
-
 .hero-title {
     font-size: 4rem;
     font-weight: 700;
@@ -433,7 +427,6 @@ body {
     background-clip: text;
     animation: titleGlow 3s ease-in-out infinite alternate;
 }
-
 @keyframes titleGlow {
     0% {
         filter: drop-shadow(0 0 20px rgba(176, 141, 87, 0.2));
@@ -442,7 +435,6 @@ body {
         filter: drop-shadow(0 0 40px rgba(176, 141, 87, 0.4));
     }
 }
-
 .hero-sub {
     font-size: 1.3rem;
     font-weight: 500;
@@ -488,7 +480,6 @@ body {
     overflow: hidden;
     clip-path: polygon(0 6px, 6px 0, 100% 0, 100% 100%, 0 100%);
 }
-
 .btn::before {
     content: '';
     position: absolute;
@@ -499,11 +490,9 @@ body {
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
     transition: left 0.6s var(--transition);
 }
-
 .btn:hover::before {
     left: 100%;
 }
-
 .btn:active {
     transform: translateY(2px);
     box-shadow:
@@ -597,6 +586,41 @@ body {
 }
 
 /* ============================================================
+   FILTROS
+   ============================================================ */
+.filter-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    padding: 6px 20px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
+    transition: all 0.3s var(--transition);
+    backdrop-filter: blur(8px);
+}
+
+.filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.filter-btn.active {
+    background: var(--accent);
+    color: #15161A;
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(176, 141, 87, 0.2);
+}
+
+/* ============================================================
    GRIDS
    ============================================================ */
 .grid {
@@ -611,7 +635,7 @@ body {
 }
 
 /* ============================================================
-   CARDS con efecto glassmorphism + tilt
+   CARDS con efecto glassmorphism + tilt + overlay
    ============================================================ */
 .card {
     background: var(--bg-card);
@@ -630,7 +654,6 @@ body {
     will-change: transform;
 }
 
-/* Efecto de brillo en las cards */
 .card::before {
     content: '';
     position: absolute;
@@ -666,6 +689,7 @@ body {
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, transparent 60%, rgba(13, 14, 18, 0.6));
+    z-index: 1;
 }
 
 .card-tag {
@@ -683,6 +707,40 @@ body {
     box-shadow: inset -1px -1px 0 var(--border-dark), inset 1px 1px 0 var(--border-light);
     z-index: 2;
     clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* OVERLAY (aparece al hover) */
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 14, 18, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s var(--transition);
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
+    z-index: 3;
+}
+
+.card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-overlay-icon {
+    font-size: 2.2rem;
+    margin-bottom: 6px;
+}
+
+.card-overlay-text {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
 
 .card-title {
@@ -733,7 +791,7 @@ body {
 }
 
 /* ============================================================
-   SPOTLIGHT
+   SPOTLIGHT (mejorado)
    ============================================================ */
 .spotlight {
     margin-top: 48px;
@@ -745,53 +803,79 @@ body {
     overflow: hidden;
     transition: opacity 0.4s var(--transition), transform 0.4s var(--transition);
 }
+
 .spotlight-inner {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 32px;
     padding: 28px;
 }
-.spotlight-images {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
+
+.spotlight-image-main {
+    height: 280px;
+    border: 1px solid var(--border-light);
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
+    overflow: hidden;
 }
-.spotlight-img {
-    height: 160px;
+
+.spotlight-img-final {
+    width: 100%;
+    height: 100%;
     background-size: cover;
     background-position: center;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 16px;
+    transition: background-image 0.5s var(--transition);
+}
+
+.spotlight-badge {
+    background: var(--bg-primary);
     color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 4px 14px;
     border: 1px solid var(--border-light);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
-    transition: transform 0.4s var(--transition);
 }
-.spotlight-img:hover {
-    transform: scale(1.02);
-}
+
 .spotlight-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .spotlight-title {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 4px;
     transition: opacity 0.3s var(--transition);
 }
+
 .spotlight-desc {
     color: var(--text-secondary);
     font-size: 0.95rem;
     margin-bottom: 12px;
     transition: opacity 0.3s var(--transition);
 }
+
+.spotlight-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 6px 0 12px;
+}
+
+.spotlight-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .spotlight-tags {
     list-style: none;
     display: flex;
@@ -799,6 +883,7 @@ body {
     flex-wrap: wrap;
     margin-bottom: 16px;
 }
+
 .spotlight-tags li {
     background: var(--bg-primary);
     padding: 2px 14px;
@@ -809,10 +894,12 @@ body {
     clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
     transition: all 0.3s var(--transition);
 }
+
 .spotlight-tags li:hover {
     border-color: var(--accent);
     color: var(--text-primary);
 }
+
 .spotlight .btn {
     align-self: flex-start;
 }
@@ -978,17 +1065,20 @@ body {
 }
 
 /* ============================================================
-   SCROLL REVEAL
+   SCROLL REVEAL (EFECTO CONSTRUCCIÓN)
    ============================================================ */
 .reveal {
     opacity: 0;
-    transform: translateY(40px) scale(0.96);
+    transform: translateY(30px) scale(0.95);
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
     transition: opacity 0.7s var(--transition),
-        transform 0.7s var(--transition);
+                transform 0.7s var(--transition),
+                clip-path 0.7s var(--transition);
 }
 .reveal.visible {
     opacity: 1;
     transform: translateY(0) scale(1);
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
 }
 .portfolio-grid .card.reveal.visible {
     transition-delay: calc(var(--index, 0) * 60ms);
@@ -1013,6 +1103,7 @@ body {
         opacity: 1;
         transform: none;
         transition: none;
+        clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
     }
     .card,
     .btn,
@@ -1059,6 +1150,10 @@ body {
     }
     .spotlight-inner {
         grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .spotlight-image-main {
+        height: 200px;
     }
 }
 
@@ -1092,13 +1187,9 @@ body {
     }
     .spotlight-inner {
         padding: 16px;
-        gap: 16px;
     }
-    .spotlight-images {
-        grid-template-columns: 1fr 1fr;
-    }
-    .spotlight-img {
-        height: 100px;
+    .spotlight-image-main {
+        height: 160px;
     }
     .portfolio-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -1115,6 +1206,13 @@ body {
     }
     .section-title {
         font-size: 1.8rem;
+    }
+    .filter-bar {
+        gap: 8px;
+    }
+    .filter-btn {
+        font-size: 0.65rem;
+        padding: 4px 14px;
     }
 }
 
@@ -1133,8 +1231,8 @@ body {
     .service-grid {
         grid-template-columns: 1fr;
     }
-    .spotlight-images {
-        grid-template-columns: 1fr;
+    .spotlight-image-main {
+        height: 140px;
     }
     .portfolio-grid {
         grid-template-columns: 1fr;
