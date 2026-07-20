@@ -39,11 +39,11 @@
                 x: Math.random() * width,
                 y: Math.random() * height,
                 size,
-                speed: 6 + Math.random() * 14, // px por segundo, hacia arriba
+                speed: 6 + Math.random() * 14,
                 drift: (Math.random() - 0.5) * 8,
                 rot: Math.random() * Math.PI,
                 rotSpeed: (Math.random() - 0.5) * 0.25,
-                depth: 0.3 + Math.random() * 0.7, // afecta parallax
+                depth: 0.3 + Math.random() * 0.7,
                 colors: palette[Math.floor(Math.random() * palette.length)],
             };
         }
@@ -65,7 +65,6 @@
             }
         }
 
-        // Dibuja un cuadrado achaflanado (mismo lenguaje visual que las cards/tags de la UI)
         function drawChamfer(x, y, size, rot, fill, edge) {
             const c = size * 0.22;
             ctx.save();
@@ -93,7 +92,6 @@
             const dt = Math.min((now - lastTime) / 1000, 0.05);
             lastTime = now;
 
-            // Suavizar el parallax hacia el objetivo (respuesta tipo resorte simple)
             parallaxX += (targetParallaxX - parallaxX) * 0.04;
             parallaxY += (targetParallaxY - parallaxY) * 0.04;
 
@@ -141,7 +139,6 @@
 
         rafId = requestAnimationFrame(tick);
     } else if (bgCanvas) {
-        // Reduced motion: ocultar el canvas, ya cubierto por CSS, pero por si acaso.
         bgCanvas.style.display = 'none';
     }
 
@@ -185,7 +182,7 @@
     }
 
     // ============================================================
-    // 0c. HERO — tilt 3D del avatar al mover el mouse
+    // 0c. HERO — tilt 3D del avatar
     // ============================================================
     const heroSection = document.querySelector('.hero');
     const avatarSvg = document.querySelector('.hero-avatar-svg');
@@ -205,8 +202,7 @@
     }
 
     // ============================================================
-    // 0c-bis. CURSOR GLOW GLOBAL — luz que sigue el cursor en TODA
-    // la página (fixed = nunca se corta ni se desalinea)
+    // 0c-bis. CURSOR GLOW GLOBAL
     // ============================================================
     if (canHover && !prefersReducedMotion) {
         const cursorGlow = document.createElement('div');
@@ -251,16 +247,14 @@
     }
 
     // ============================================================
-    // 1. LOADBAR (generando chunk)
+    // 1. LOADBAR
     // ============================================================
     const loadbar = document.querySelector('.loadbar');
     if (loadbar) {
-        // Forzamos un pequeño delay para que la barra se vea
         setTimeout(() => {
             loadbar.classList.add('done');
         }, 800);
 
-        // Ocultar completamente después de la transición
         loadbar.addEventListener('transitionend', () => {
             if (loadbar.classList.contains('done')) {
                 loadbar.style.display = 'none';
@@ -269,7 +263,7 @@
     }
 
     // ============================================================
-    // 2. SCROLL REVEAL (con stagger)
+    // 2. SCROLL REVEAL
     // ============================================================
     const revealEls = document.querySelectorAll('.reveal');
 
@@ -277,7 +271,6 @@
         (entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
-                    // Aplicar índice para stagger (si está en grid)
                     const parentGrid = entry.target.closest('.grid');
                     if (parentGrid) {
                         const cards = parentGrid.querySelectorAll('.card');
@@ -287,7 +280,6 @@
                         }
                     }
                     entry.target.classList.add('visible');
-                    // Una vez visible, dejar de observar
                     revealObserver.unobserve(entry.target);
                 }
             });
@@ -314,14 +306,14 @@
         const portfolioCards = document.querySelectorAll('.portfolio-card');
         let currentSpotlightKey = null;
 
-        // Data de proyectos (simulada, reemplazar con datos reales)
+        // Data de proyectos (reemplaza los gradientes por tus imágenes reales)
         const projectsData = {
             forest: {
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg)',
-                final: 'url(assets/forest.jpg',
+                clay: 'linear-gradient(135deg, #2e2e2e, #1a1a1a)',
+                final: 'linear-gradient(135deg, #3d2a1a, #221510)',
                 link: '#',
             },
             pool: {
@@ -350,7 +342,6 @@
             },
         };
 
-        // Función para actualizar el spotlight con fade
         function updateSpotlight(projectKey) {
             const data = projectsData[projectKey];
             if (!data) return;
@@ -360,7 +351,6 @@
                 c.classList.toggle('is-active', c.dataset.project === projectKey);
             });
 
-            // Aplicar fade a los textos
             spotlightTitle.style.opacity = '0';
             spotlightDesc.style.opacity = '0';
             clayImg.classList.add('switching');
@@ -369,15 +359,11 @@
             setTimeout(() => {
                 spotlightTitle.textContent = data.title;
                 spotlightDesc.textContent = data.desc;
-                // Tags
                 spotlightTags.innerHTML = data.tags.map(t => `<li>${t}</li>`).join('');
-                // Imágenes
                 clayImg.style.backgroundImage = data.clay;
                 finalImg.style.backgroundImage = data.final;
-                // Enlace
                 verMasBtn.href = data.link;
 
-                // Restaurar opacidad
                 spotlightTitle.style.opacity = '1';
                 spotlightDesc.style.opacity = '1';
                 clayImg.classList.remove('switching');
@@ -385,11 +371,9 @@
             }, 150);
         }
 
-        // Escuchar clics en las cards del portafolio
         portfolioCards.forEach((card) => {
             const project = card.dataset.project;
             if (project) {
-                // Click con mouse o teclado (Enter/Space)
                 card.addEventListener('click', () => {
                     updateSpotlight(project);
                 });
@@ -402,14 +386,13 @@
             }
         });
 
-        // Inicializar con el primer proyecto (Forest)
         if (portfolioCards.length > 0) {
             const firstProject = portfolioCards[0].dataset.project;
             if (firstProject) updateSpotlight(firstProject);
         }
 
         // ============================================================
-        // 3b. MODAL — vista grande del proyecto + slider de breakdown
+        // 3b. MODAL — vista grande + slider de breakdown
         // ============================================================
         const modal = document.getElementById('projectModal');
         if (modal) {
@@ -457,7 +440,6 @@
                 document.body.classList.add('no-scroll');
                 document.addEventListener('keydown', onKeydown);
 
-                // Foco al panel para accesibilidad (lector de pantalla / teclado)
                 requestAnimationFrame(() => modalPanel.focus());
             }
 
@@ -480,7 +462,6 @@
                 breakdownBtn.textContent = isShowing ? 'Ocultar breakdown' : 'Ver Breakdown';
             });
 
-            // El botón "Ver más" del spotlight abre el modal del proyecto activo
             if (verMasBtn) {
                 verMasBtn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -488,7 +469,7 @@
                 });
             }
 
-            // --- Slider de comparación (arrastrar para ver antes/después) ---
+            // Slider de comparación (arrastrar)
             function splitFromClientX(clientX) {
                 const rect = compareSliderEl.getBoundingClientRect();
                 const percent = ((clientX - rect.left) / rect.width) * 100;
@@ -539,7 +520,6 @@
             menuToggle.setAttribute('aria-expanded', isOpen);
         });
 
-        // Cerrar al hacer clic en un enlace
         navLinks.querySelectorAll('a').forEach((link) => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('open');
@@ -549,7 +529,7 @@
     }
 
     // ============================================================
-    // 5. FORMULARIO DE CONTACTO (simulación)
+    // 5. FORMULARIO DE CONTACTO
     // ============================================================
     const form = document.getElementById('contactForm');
     if (form) {
@@ -558,7 +538,6 @@
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            // Validación básica
             const name = form.querySelector('#name').value.trim();
             const type = form.querySelector('#commissionType').value;
             const message = form.querySelector('#message').value.trim();
@@ -569,12 +548,10 @@
                 return;
             }
 
-            // Simular envío
             feedback.textContent = '✉️ ¡Mensaje enviado! Te responderé pronto.';
             feedback.style.color = 'var(--accent)';
             form.reset();
 
-            // Limpiar feedback después de 5s
             setTimeout(() => {
                 feedback.textContent = '';
             }, 5000);
@@ -584,7 +561,13 @@
     // ============================================================
     // 6. ACCESIBILIDAD
     // ============================================================
-    // El canvas de fondo, el tilt de las cards y el glow del hero
-    // se desactivan por completo si prefers-reduced-motion está
-    // activo o el dispositivo no tiene hover fino (móvil/táctil).
+    // (Ya está todo cubierto por prefers-reduced-motion y canHover)
+
+    // ============================================================
+    // 7. ENFOQUE AL INICIO (siempre arriba)
+    // ============================================================
+    if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
 })();
