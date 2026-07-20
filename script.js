@@ -313,7 +313,7 @@
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
                 clay: 'url(assets/forest-raw.jpg)',
-                final: 'url(assets/forest.jpg))',
+                final: 'url(assets/forest.jpg)',
                 link: '#',
             },
             pool: {
