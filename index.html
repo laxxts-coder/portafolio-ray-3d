@@ -112,7 +112,8 @@
 
             <div class="grid portfolio-grid" id="portfolioGrid">
                 <!-- Forest -->
-                <article class="card portfolio-card reveal" data-project="forest" data-category="ambiente" role="button" tabindex="0">
+                <article class="card portfolio-card reveal" data-project="forest" data-category="ambiente" 
+                         data-image="assets/forest.jpg" data-raw="assets/forest-raw.jpg" role="button" tabindex="0">
                     <div class="card-image" style="background-image: url('assets/forest-thumb.jpg'), linear-gradient(135deg, #2d3a2a, #1a2218);">
                         <span class="card-tag">Ambiente</span>
                         <div class="card-overlay">
@@ -125,7 +126,8 @@
                 </article>
 
                 <!-- Pool -->
-                <article class="card portfolio-card reveal" data-project="pool" data-category="ambiente" role="button" tabindex="0">
+                <article class="card portfolio-card reveal" data-project="pool" data-category="ambiente"
+                         data-image="assets/pool.jpg" data-raw="assets/pool-raw.jpg" role="button" tabindex="0">
                     <div class="card-image" style="background-image: url('assets/pool-thumb.jpg'), linear-gradient(135deg, #1e3a4a, #0f222b);">
                         <span class="card-tag">Ambiente</span>
                         <div class="card-overlay">
@@ -138,7 +140,8 @@
                 </article>
 
                 <!-- Hide and Seek -->
-                <article class="card portfolio-card reveal" data-project="hide" data-category="modelado" role="button" tabindex="0">
+                <article class="card portfolio-card reveal" data-project="hide" data-category="modelado"
+                         data-image="assets/hide.jpg" data-raw="assets/hide-raw.jpg" role="button" tabindex="0">
                     <div class="card-image" style="background-image: url('assets/hide-thumb.jpg'), linear-gradient(135deg, #3d2a1a, #221510);">
                         <span class="card-tag">Modelado</span>
                         <div class="card-overlay">
@@ -151,7 +154,8 @@
                 </article>
 
                 <!-- El Circulo BerSty -->
-                <article class="card portfolio-card reveal" data-project="circle" data-category="animacion" role="button" tabindex="0">
+                <article class="card portfolio-card reveal" data-project="circle" data-category="animacion"
+                         data-image="assets/circle.jpg" data-raw="assets/circle-raw.jpg" role="button" tabindex="0">
                     <div class="card-image" style="background-image: url('assets/circle-thumb.jpg'), linear-gradient(135deg, #2a1e3a, #171022);">
                         <span class="card-tag">Animación</span>
                         <div class="card-overlay">
@@ -164,7 +168,7 @@
                 </article>
             </div>
 
-            <!-- SPOTLIGHT (mejorado) -->
+            <!-- SPOTLIGHT (ahora con más información) -->
             <div class="spotlight" id="spotlight" role="region" aria-label="Detalle del proyecto">
                 <div class="spotlight-inner">
                     <div class="spotlight-image-main">
@@ -299,6 +303,36 @@
             </form>
         </section>
     </main>
+
+    <!-- ============================================================
+    MODAL - IMAGEN AMPLIADA + BREAKDOWN
+    ============================================================ -->
+    <div class="modal" id="imageModal" role="dialog" aria-modal="true" aria-label="Vista ampliada de proyecto">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose" aria-label="Cerrar modal">✕</button>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img src="" alt="Render final" id="modalImage" />
+                    <div class="modal-raw-overlay" id="modalRawOverlay">
+                        <img src="" alt="Render crudo (sin iluminación)" id="modalRawImage" />
+                    </div>
+                    <div class="modal-slider-handle" id="modalSliderHandle">
+                        <span class="modal-slider-line"></span>
+                        <span class="modal-slider-button">◀ ▶</span>
+                    </div>
+                </div>
+                <div class="modal-info">
+                    <h2 id="modalTitle">Título del proyecto</h2>
+                    <p id="modalDesc">Descripción detallada.</p>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary btn-sm" id="modalBreakdownBtn">🔍 Breakdown</button>
+                        <a href="#" class="btn btn-primary btn-sm" id="modalBehanceBtn" target="_blank">Ver en Behance</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ============================================================
     FOOTER
