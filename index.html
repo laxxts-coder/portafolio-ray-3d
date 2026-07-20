@@ -62,7 +62,7 @@
                 <p class="hero-sub hero-anim" style="--d:150ms">Render realista &amp; modelado 3D</p>
                 <p class="hero-desc hero-anim" style="--d:220ms">Ambientes Minecraft · Blockbench · Blender</p>
                 <div class="hero-cta hero-anim" style="--d:290ms">
-                    <a href="#build" class="btn btn-primary">Ver builds</a>
+                    <a href="#build" class="btn btn-primary btn-glow">Ver builds</a>
                     <a href="#contact" class="btn btn-secondary">Contactar</a>
                 </div>
             </div>
@@ -124,7 +124,7 @@
                             <li>Blockbench</li>
                             <li>Cycles</li>
                         </ul>
-                        <a href="#" class="btn btn-primary btn-sm">Ver más</a>
+                        <a href="#" class="btn btn-primary btn-sm" id="verMasBtn">Ver más</a>
                     </div>
                 </div>
             </div>
@@ -240,6 +240,38 @@
             <span>X: 0</span> <span>Y: 64</span> <span>Z: 0</span>
         </p>
     </footer>
+
+    <!-- MODAL: vista grande del proyecto + slider de breakdown -->
+    <div class="project-modal" id="projectModal" aria-hidden="true">
+        <div class="project-modal-backdrop" data-modal-close></div>
+        <div class="project-modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+            <button class="project-modal-close" type="button" aria-label="Cerrar" data-modal-close>&times;</button>
+
+            <div class="project-modal-media">
+                <div class="modal-final-view" id="modalFinalView"></div>
+                <div class="compare-slider" id="compareSlider">
+                    <div class="compare-layer compare-before" id="compareBefore">
+                        <span class="compare-label">Blockout / Clay</span>
+                    </div>
+                    <div class="compare-layer compare-after" id="compareAfter">
+                        <span class="compare-label">Render final</span>
+                    </div>
+                    <div class="compare-handle" id="compareHandle" role="slider" aria-orientation="horizontal"
+                        aria-label="Comparar blockout y render final" aria-valuemin="0" aria-valuemax="100"
+                        aria-valuenow="50" tabindex="0">
+                        <span class="compare-handle-grip" aria-hidden="true">&#8596;</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-modal-info">
+                <h3 class="modal-title" id="modalTitle"></h3>
+                <p class="modal-desc"></p>
+                <ul class="modal-tags"></ul>
+                <button class="btn btn-secondary btn-sm modal-breakdown-btn" id="breakdownBtn" type="button">Ver Breakdown</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js" defer></script>
 </body>
