@@ -479,3 +479,12 @@
     }
     window.scrollTo(0, 0);
 })();
+// Forzar visibilidad de las cards al hacer clic en "Ver builds"
+document.querySelector('.hero-cta a[href="#build"]')?.addEventListener('click', () => {
+    // Dar un pequeño retraso para que el scroll se complete
+    setTimeout(() => {
+        document.querySelectorAll('#build .card.reveal').forEach(card => {
+            card.classList.add('visible');
+        });
+    }, 300);
+});
