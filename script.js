@@ -33,7 +33,6 @@
         update() {
             this.x += this.speedX;
             this.y += this.speedY;
-            // Interacción con mouse
             const dx = this.x - mouseX;
             const dy = this.y - mouseY;
             const dist = Math.sqrt(dx * dx + dy * dy);
@@ -53,13 +52,11 @@
         }
     }
 
-    // Crear partículas
     const particleCount = Math.min(120, Math.floor((w * h) / 15000));
     for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle());
     }
 
-    // Conexiones entre partículas
     function drawConnections() {
         for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
@@ -90,7 +87,6 @@
     }
     animateParticles();
 
-    // Mouse tracking para partículas
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
@@ -117,7 +113,6 @@
         dotY = e.clientY;
     });
 
-    // Hover effects en elementos interactivos
     const hoverElements = document.querySelectorAll('a, .btn, .card, .portfolio-card, .tool, .process-steps li, .nav-links a, .logo');
     hoverElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
@@ -190,15 +185,15 @@
     revealEls.forEach((el) => revealObserver.observe(el));
 
     // ============================================================
-    // 6. SPOTLIGHT
+    // 6. SPOTLIGHT (mejorado con datos ampliados)
     // ============================================================
     const spotlight = document.getElementById('spotlight');
     if (spotlight) {
         const spotlightTitle = spotlight.querySelector('.spotlight-title');
         const spotlightDesc = spotlight.querySelector('.spotlight-desc');
         const spotlightTags = spotlight.querySelector('.spotlight-tags');
-        const clayImg = spotlight.querySelector('.clay');
-        const finalImg = spotlight.querySelector('.final');
+        const spotlightMeta = spotlight.querySelector('.spotlight-meta');
+        const mainImg = spotlight.querySelector('.spotlight-img-final');
         const verMasBtn = spotlight.querySelector('.btn');
 
         const projectsData = {
@@ -206,51 +201,64 @@
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'linear-gradient(135deg, #2e2e2e, #1a1a1a)',
                 final: 'linear-gradient(135deg, #3d2a1a, #221510)',
-                link: '#',
+                time: '6h render',
+                tools: 'Blender + Blockbench',
+                link: 'https://www.behance.net/your-link-forest',
             },
             pool: {
                 title: 'Pool',
                 desc: 'Piscina con iluminación volumétrica y reflejos realistas. Trabajo de iluminación en Blender con texturas personalizadas.',
                 tags: ['Blender', 'Volumetric', 'Reflections'],
-                clay: 'linear-gradient(135deg, #1e2a3a, #0f1a22)',
                 final: 'linear-gradient(135deg, #1e3a4a, #0f222b)',
-                link: '#',
+                time: '8h render',
+                tools: 'Blender + Photoshop',
+                link: 'https://www.behance.net/your-link-pool',
             },
             hide: {
                 title: 'Hide and Seek',
                 desc: 'Escena de persecución en Blockbench con personajes low-poly y narrativa visual. Animación básica incluida.',
                 tags: ['Blockbench', 'Low-poly', 'Animation'],
-                clay: 'linear-gradient(135deg, #3a2a1a, #1f150e)',
                 final: 'linear-gradient(135deg, #3d2a1a, #221510)',
-                link: '#',
+                time: '4h modelado',
+                tools: 'Blockbench + Blender',
+                link: 'https://www.behance.net/your-link-hide',
             },
             circle: {
                 title: 'El Circulo BerSty',
                 desc: 'Ciclo animado con estilo gráfico inspirado en Minecraft. Combina modelado Blockbench y postproducción en Photoshop.',
                 tags: ['Animation', 'Blockbench', 'Photoshop'],
-                clay: 'linear-gradient(135deg, #2a1e3a, #171022)',
                 final: 'linear-gradient(135deg, #2a1e3a, #171022)',
-                link: '#',
+                time: '12h animación',
+                tools: 'Blockbench + Photoshop',
+                link: 'https://www.behance.net/your-link-circle',
             },
         };
 
         function updateSpotlight(projectKey) {
             const data = projectsData[projectKey];
             if (!data) return;
+            // Fade out
             spotlightTitle.style.opacity = '0';
             spotlightDesc.style.opacity = '0';
+            mainImg.style.opacity = '0';
+
             setTimeout(() => {
                 spotlightTitle.textContent = data.title;
                 spotlightDesc.textContent = data.desc;
                 spotlightTags.innerHTML = data.tags.map(t => `<li>${t}</li>`).join('');
-                clayImg.style.backgroundImage = data.clay;
-                finalImg.style.backgroundImage = data.final;
+                mainImg.style.backgroundImage = data.final;
+                spotlightMeta.innerHTML = `
+                    <span>⏱️ ${data.time}</span>
+                    <span>🛠️ ${data.tools}</span>
+                `;
                 verMasBtn.href = data.link;
+
+                // Fade in
                 spotlightTitle.style.opacity = '1';
                 spotlightDesc.style.opacity = '1';
-            }, 200);
+                mainImg.style.opacity = '1';
+            }, 250);
         }
 
         const portfolioCards = document.querySelectorAll('.portfolio-card');
@@ -266,14 +274,19 @@
                 });
             }
         });
+
+        // Inicializar con el primer proyecto (Forest)
         if (portfolioCards.length > 0) {
             const firstProject = portfolioCards[0].dataset.project;
-            if (firstProject) updateSpotlight(firstProject);
+            if (firstProject) {
+                // Forzar que el spotlight muestre Forest al cargar
+                setTimeout(() => updateSpotlight(firstProject), 300);
+            }
         }
     }
 
     // ============================================================
-    // 7. EFECTO TILT EN CARDS (solo desktop)
+    // 7. EFECTO TILT EN CARDS
     // ============================================================
     if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         const cards = document.querySelectorAll('.card');
@@ -284,7 +297,6 @@
                 const y = (e.clientY - rect.top) / rect.height - 0.5;
                 card.style.transform =
                     `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateY(-6px) scale(1.01)`;
-                // Actualizar posición del brillo
                 const px = ((e.clientX - rect.left) / rect.width * 100);
                 const py = ((e.clientY - rect.top) / rect.height * 100);
                 card.style.setProperty('--mouse-x', px + '%');
@@ -297,7 +309,50 @@
     }
 
     // ============================================================
-    // 8. MENÚ MÓVIL
+    // 8. FILTROS POR CATEGORÍA
+    // ============================================================
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const portfolioCardsFilter = document.querySelectorAll('.portfolio-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.dataset.filter;
+            portfolioCardsFilter.forEach((card, index) => {
+                const category = card.dataset.category;
+                const shouldShow = (filter === 'all' || category === filter);
+
+                if (shouldShow) {
+                    card.style.display = 'block';
+                    // Re-trigger reveal con stagger
+                    card.classList.remove('visible');
+                    // Resetear el clip-path para que la animación se repita
+                    card.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+                    card.style.opacity = '0';
+                    // Asignar índice para stagger
+                    const allVisible = document.querySelectorAll('.portfolio-card[style*="display: block"]');
+                    const visibleArr = Array.from(allVisible);
+                    const idx = visibleArr.indexOf(card);
+                    if (idx !== -1) {
+                        card.style.setProperty('--index', idx);
+                    }
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                        card.style.clipPath = '';
+                        card.style.opacity = '';
+                    }, 50);
+                } else {
+                    card.style.display = 'none';
+                    card.classList.remove('visible');
+                }
+            });
+        });
+    });
+
+    // ============================================================
+    // 9. MENÚ MÓVIL
     // ============================================================
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
@@ -315,7 +370,7 @@
     }
 
     // ============================================================
-    // 9. FORMULARIO
+    // 10. FORMULARIO
     // ============================================================
     const form = document.getElementById('contactForm');
     if (form) {
@@ -338,7 +393,7 @@
     }
 
     // ============================================================
-    // 10. REDUCED MOTION - ocultar cursor personalizado
+    // 11. REDUCED MOTION
     // ============================================================
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (prefersReducedMotion.matches) {
