@@ -284,8 +284,8 @@
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg'), // ← url(assets/proyectos/forest-clay.jpg)
-                final: 'url(assets/forest.jpg'), // ← url(assets/proyectos/forest-final.jpg)
+                clay: 'url(assets/forest-raw.jpg)', // ← url(assets/proyectos/forest-clay.jpg)
+                final: 'url(assets/forest.jpg)', // ← url(assets/proyectos/forest-final.jpg)
             },
             pool: {
                 title: 'Pool',
@@ -479,23 +479,31 @@
     }
     window.scrollTo(0, 0);
 
-        // ============================================================
-    // 8. FORZAR VISIBILIDAD DE LAS CARDS AL HACER CLIC EN "VER BUILDS"
     // ============================================================
-    const verBuildsBtn = document.querySelector('.hero-cta a[href="#build"]');
+    // 8. DESBLOQUEAR SCROLL Y MOSTRAR CARDS AL HACER CLIC EN "VER BUILDS"
+    // ============================================================
+    const verBuildsBtn = document.getElementById('verBuildsBtn');
     if (verBuildsBtn) {
         verBuildsBtn.addEventListener('click', function(e) {
-            // No prevenimos el comportamiento normal (el scroll suave debe ocurrir)
-            // Pero después de un breve retraso, forzamos que las cards se vuelvan visibles
-            setTimeout(() => {
-                document.querySelectorAll('#build .card.reveal').forEach(card => {
-                    card.classList.add('visible');
-                });
-                // También forzamos el header de la sección
-                const header = document.querySelector('#build .section-header.reveal');
-                if (header) header.classList.add('visible');
-            }, 400); // Esperamos a que el scroll suave termine (~400ms)
+            // Prevenir el comportamiento por defecto del enlace (para controlarlo manualmente)
+            e.preventDefault();
+
+            // 1. Desbloquear scroll
+            document.body.classList.add('scroll-unlocked');
+
+            // 2. Forzar visibilidad de las cards y header de la sección #build
+            document.querySelectorAll('#build .card.reveal').forEach(card => {
+                card.classList.add('visible');
+            });
+            const header = document.querySelector('#build .section-header.reveal');
+            if (header) header.classList.add('visible');
+
+            // 3. Hacer scroll suave hasta la sección #build
+            const target = document.querySelector('#build');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         });
     }
-})();
 
+})();
