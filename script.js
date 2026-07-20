@@ -284,8 +284,8 @@
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg)', // ← url(assets/proyectos/forest-clay.jpg)
-                final: 'url(assets/forest.jpg)', // ← url(assets/proyectos/forest-final.jpg)
+                clay: 'linear-gradient(135deg, #2e2e2e, #1a1a1a)', // ← url(assets/proyectos/forest-clay.jpg)
+                final: 'linear-gradient(135deg, #3d2a1a, #221510)', // ← url(assets/proyectos/forest-final.jpg)
             },
             pool: {
                 title: 'Pool',
@@ -401,7 +401,6 @@
         // ============================================================
         // 4. ABRIR MODAL DESDE LAS CARDS Y BOTONES "Ver más"
         // ============================================================
-        // Clic en la propia card
         document.querySelectorAll('.portfolio-card').forEach((card) => {
             const project = card.dataset.project;
             if (project) {
@@ -418,7 +417,6 @@
             }
         });
 
-        // Clic en el botón "Ver más" dentro de cada card
         document.querySelectorAll('.card-btn').forEach((btn) => {
             const project = btn.dataset.project;
             if (project) {
@@ -480,30 +478,32 @@
     window.scrollTo(0, 0);
 
     // ============================================================
-    // 8. DESBLOQUEAR SCROLL Y MOSTRAR CARDS AL HACER CLIC EN "VER BUILDS"
+    // 8. BLOQUEO DE SCROLL INICIAL Y DESPLIEGUE AL HACER CLIC EN "VER BUILDS"
     // ============================================================
     const verBuildsBtn = document.getElementById('verBuildsBtn');
     if (verBuildsBtn) {
         verBuildsBtn.addEventListener('click', function(e) {
-            // Prevenir el comportamiento por defecto del enlace (para controlarlo manualmente)
+            // Prevenir el comportamiento predeterminado del enlace
             e.preventDefault();
 
-            // 1. Desbloquear scroll
+            // Desbloquear el scroll del body
             document.body.classList.add('scroll-unlocked');
 
-            // 2. Forzar visibilidad de las cards y header de la sección #build
-            document.querySelectorAll('#build .card.reveal').forEach(card => {
+            // Forzar la visibilidad de las cards de la sección #build
+            const cards = document.querySelectorAll('#build .card.reveal');
+            cards.forEach(card => {
                 card.classList.add('visible');
             });
+
+            // Forzar el header de la sección
             const header = document.querySelector('#build .section-header.reveal');
             if (header) header.classList.add('visible');
 
-            // 3. Hacer scroll suave hasta la sección #build
+            // Desplazarse suavemente hasta la sección #build
             const target = document.querySelector('#build');
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                target.scrollIntoView({ behavior: 'smooth' });
             }
         });
     }
-
 })();
