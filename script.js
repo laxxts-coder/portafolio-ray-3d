@@ -5,21 +5,17 @@
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     // ============================================================
-    // 0. FONDO DINÁMICO — voxels ambientales a la deriva
+    // 0. FONDO DINÁMICO — voxels ambientales
     // ============================================================
     const bgCanvas = document.getElementById('bg-canvas');
     if (bgCanvas && !prefersReducedMotion) {
         const ctx = bgCanvas.getContext('2d');
-        let width = 0;
-        let height = 0;
+        let width = 0, height = 0;
         let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         let voxels = [];
-        let parallaxX = 0;
-        let parallaxY = 0;
-        let targetParallaxX = 0;
-        let targetParallaxY = 0;
-        let rafId = null;
-        let running = true;
+        let parallaxX = 0, parallaxY = 0;
+        let targetParallaxX = 0, targetParallaxY = 0;
+        let rafId = null, running = true;
 
         const palette = [
             { fill: 'rgba(176, 141, 87, 0.10)', edge: 'rgba(212, 180, 130, 0.16)' },
@@ -32,7 +28,6 @@
             if (w < 1100) return 20;
             return 28;
         }
-
         function makeVoxel() {
             const size = 10 + Math.random() * 22;
             return {
@@ -47,7 +42,6 @@
                 colors: palette[Math.floor(Math.random() * palette.length)],
             };
         }
-
         function resize() {
             width = window.innerWidth;
             height = window.innerHeight;
@@ -56,7 +50,6 @@
             bgCanvas.style.width = width + 'px';
             bgCanvas.style.height = height + 'px';
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
             const target = countFor(width);
             if (voxels.length < target) {
                 while (voxels.length < target) voxels.push(makeVoxel());
@@ -64,18 +57,17 @@
                 voxels.length = target;
             }
         }
-
         function drawChamfer(x, y, size, rot, fill, edge) {
             const c = size * 0.22;
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(rot);
             ctx.beginPath();
-            ctx.moveTo(-size / 2, -size / 2 + c);
-            ctx.lineTo(-size / 2 + c, -size / 2);
-            ctx.lineTo(size / 2, -size / 2);
-            ctx.lineTo(size / 2, size / 2);
-            ctx.lineTo(-size / 2, size / 2);
+            ctx.moveTo(-size/2, -size/2 + c);
+            ctx.lineTo(-size/2 + c, -size/2);
+            ctx.lineTo(size/2, -size/2);
+            ctx.lineTo(size/2, size/2);
+            ctx.lineTo(-size/2, size/2);
             ctx.closePath();
             ctx.fillStyle = fill;
             ctx.fill();
@@ -84,49 +76,38 @@
             ctx.stroke();
             ctx.restore();
         }
-
         let lastTime = performance.now();
-
         function tick(now) {
             if (!running) return;
             const dt = Math.min((now - lastTime) / 1000, 0.05);
             lastTime = now;
-
             parallaxX += (targetParallaxX - parallaxX) * 0.04;
             parallaxY += (targetParallaxY - parallaxY) * 0.04;
-
             ctx.clearRect(0, 0, width, height);
-
             for (const v of voxels) {
                 v.y -= v.speed * dt;
                 v.x += v.drift * dt;
                 v.rot += v.rotSpeed * dt;
-
                 if (v.y < -v.size * 2) {
                     v.y = height + v.size * 2;
                     v.x = Math.random() * width;
                 }
                 if (v.x < -v.size * 2) v.x = width + v.size * 2;
                 if (v.x > width + v.size * 2) v.x = -v.size * 2;
-
                 const px = v.x + parallaxX * v.depth;
                 const py = v.y + parallaxY * v.depth;
                 drawChamfer(px, py, v.size, v.rot, v.colors.fill, v.colors.edge);
             }
-
             rafId = requestAnimationFrame(tick);
         }
-
         window.addEventListener('resize', resize);
         resize();
-
         if (canHover) {
             window.addEventListener('mousemove', (e) => {
                 targetParallaxX = (e.clientX / width - 0.5) * -18;
                 targetParallaxY = (e.clientY / height - 0.5) * -18;
             });
         }
-
         document.addEventListener('visibilitychange', () => {
             running = !document.hidden;
             if (running) {
@@ -136,14 +117,13 @@
                 cancelAnimationFrame(rafId);
             }
         });
-
         rafId = requestAnimationFrame(tick);
     } else if (bgCanvas) {
         bgCanvas.style.display = 'none';
     }
 
     // ============================================================
-    // 0b. NAV — fondo con blur al hacer scroll + enlace activo
+    // 0b. NAV — scroll, blur y enlace activo
     // ============================================================
     const navEl = document.querySelector('.nav');
     const sections = document.querySelectorAll('main section[id]');
@@ -163,7 +143,6 @@
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
     }
-
     if (sections.length && navAnchors.length) {
         const navObserver = new IntersectionObserver(
             (entries) => {
@@ -186,7 +165,6 @@
     // ============================================================
     const heroSection = document.querySelector('.hero');
     const avatarSvg = document.querySelector('.hero-avatar-svg');
-
     if (heroSection && canHover && !prefersReducedMotion) {
         heroSection.addEventListener('mousemove', (e) => {
             const rect = heroSection.getBoundingClientRect();
@@ -209,7 +187,6 @@
         cursorGlow.className = 'cursor-glow';
         cursorGlow.setAttribute('aria-hidden', 'true');
         document.body.appendChild(cursorGlow);
-
         let glowRAF = null;
         window.addEventListener('mousemove', (e) => {
             if (glowRAF) return;
@@ -251,10 +228,7 @@
     // ============================================================
     const loadbar = document.querySelector('.loadbar');
     if (loadbar) {
-        setTimeout(() => {
-            loadbar.classList.add('done');
-        }, 800);
-
+        setTimeout(() => loadbar.classList.add('done'), 800);
         loadbar.addEventListener('transitionend', () => {
             if (loadbar.classList.contains('done')) {
                 loadbar.style.display = 'none';
@@ -266,7 +240,6 @@
     // 2. SCROLL REVEAL
     // ============================================================
     const revealEls = document.querySelectorAll('.reveal');
-
     const revealObserver = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => {
@@ -284,36 +257,35 @@
                 }
             });
         },
-        {
-            threshold: 0.12,
-            rootMargin: '0px 0px -20px 0px',
-        }
+        { threshold: 0.12, rootMargin: '0px 0px -20px 0px' }
     );
-
     revealEls.forEach((el) => revealObserver.observe(el));
 
     // ============================================================
-    // 3. SPOTLIGHT – case study dinámico
+    // 3. MODAL — vista grande + slider de breakdown
     // ============================================================
-    const spotlight = document.getElementById('spotlight');
-    if (spotlight) {
-        const spotlightTitle = spotlight.querySelector('.spotlight-title');
-        const spotlightDesc = spotlight.querySelector('.spotlight-desc');
-        const spotlightTags = spotlight.querySelector('.spotlight-tags');
-        const clayImg = spotlight.querySelector('.clay');
-        const finalImg = spotlight.querySelector('.final');
-        const portfolioCards = document.querySelectorAll('.portfolio-card');
-        let currentSpotlightKey = null;
+    const modal = document.getElementById('projectModal');
+    if (modal) {
+        const modalPanel = modal.querySelector('.project-modal-panel');
+        const modalTitleEl = modal.querySelector('.modal-title');
+        const modalDescEl = modal.querySelector('.modal-desc');
+        const modalTagsEl = modal.querySelector('.modal-tags');
+        const modalFinalView = modal.querySelector('.modal-final-view');
+        const compareSliderEl = modal.querySelector('.compare-slider');
+        const compareBeforeEl = modal.querySelector('.compare-before');
+        const compareAfterEl = modal.querySelector('.compare-after');
+        const compareHandle = modal.querySelector('.compare-handle');
+        const breakdownBtn = modal.querySelector('.modal-breakdown-btn');
+        let lastFocused = null;
 
-        // 👇 Data de proyectos — REEMPLAZA los gradientes por tus imágenes reales
+        // 👇 Datos de los proyectos (¡Reemplaza los gradientes por tus imágenes!)
         const projectsData = {
             forest: {
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg)', // ← cámbialo por: 'url(assets/proyectos/forest-clay.jpg)'
-                final: 'url(assets/forest.jpg)', // ← cámbialo por: 'url(assets/proyectos/forest-final.jpg)'
-                link: '#',
+                clay: 'url(assets/forest-raw.jpg', // ← url(assets/proyectos/forest-clay.jpg)
+                final: 'url(assets/forest.jpg', // ← url(assets/proyectos/forest-final.jpg)
             },
             pool: {
                 title: 'Pool',
@@ -321,7 +293,6 @@
                 tags: ['Blender', 'Volumetric', 'Reflections'],
                 clay: 'linear-gradient(135deg, #1e2a3a, #0f1a22)',
                 final: 'linear-gradient(135deg, #1e3a4a, #0f222b)',
-                link: '#',
             },
             hide: {
                 title: 'Hide and Seek',
@@ -329,7 +300,6 @@
                 tags: ['Blockbench', 'Low-poly', 'Animation'],
                 clay: 'linear-gradient(135deg, #3a2a1a, #1f150e)',
                 final: 'linear-gradient(135deg, #3d2a1a, #221510)',
-                link: '#',
             },
             circle: {
                 title: 'El Circulo BerSty',
@@ -337,183 +307,140 @@
                 tags: ['Animation', 'Blockbench', 'Photoshop'],
                 clay: 'linear-gradient(135deg, #2a1e3a, #171022)',
                 final: 'linear-gradient(135deg, #2a1e3a, #171022)',
-                link: '#',
             },
         };
 
-        function updateSpotlight(projectKey) {
+        function setSplit(percent) {
+            const clamped = Math.max(0, Math.min(100, percent));
+            compareSliderEl.style.setProperty('--split', clamped + '%');
+            compareHandle.setAttribute('aria-valuenow', String(Math.round(clamped)));
+        }
+
+        function onKeydown(e) {
+            if (e.key === 'Escape') closeModal();
+        }
+
+        function openModal(projectKey) {
             const data = projectsData[projectKey];
             if (!data) return;
 
-            currentSpotlightKey = projectKey;
-            portfolioCards.forEach((c) => {
-                c.classList.toggle('is-active', c.dataset.project === projectKey);
-            });
+            lastFocused = document.activeElement;
 
-            spotlightTitle.style.opacity = '0';
-            spotlightDesc.style.opacity = '0';
-            clayImg.classList.add('switching');
-            finalImg.classList.add('switching');
+            modalTitleEl.textContent = data.title;
+            modalDescEl.textContent = data.desc;
+            modalTagsEl.innerHTML = data.tags.map((t) => `<li>${t}</li>`).join('');
+            modalFinalView.style.backgroundImage = data.final;
+            compareBeforeEl.style.backgroundImage = data.clay;
+            compareAfterEl.style.backgroundImage = data.final;
 
-            setTimeout(() => {
-                spotlightTitle.textContent = data.title;
-                spotlightDesc.textContent = data.desc;
-                spotlightTags.innerHTML = data.tags.map(t => `<li>${t}</li>`).join('');
-                clayImg.style.backgroundImage = data.clay;
-                finalImg.style.backgroundImage = data.final;
+            modal.classList.remove('showing-breakdown');
+            setSplit(50);
+            breakdownBtn.textContent = 'Ver Breakdown';
 
-                spotlightTitle.style.opacity = '1';
-                spotlightDesc.style.opacity = '1';
-                clayImg.classList.remove('switching');
-                finalImg.classList.remove('switching');
-            }, 150);
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('no-scroll');
+            document.addEventListener('keydown', onKeydown);
+
+            requestAnimationFrame(() => modalPanel.focus());
         }
 
-        // 👇 Al hacer clic en una tarjeta: actualiza spotlight + abre modal
-        portfolioCards.forEach((card) => {
+        function closeModal() {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('no-scroll');
+            document.removeEventListener('keydown', onKeydown);
+            if (lastFocused && typeof lastFocused.focus === 'function') {
+                lastFocused.focus();
+            }
+        }
+
+        modal.querySelectorAll('[data-modal-close]').forEach((el) => {
+            el.addEventListener('click', closeModal);
+        });
+
+        breakdownBtn.addEventListener('click', () => {
+            const isShowing = modal.classList.toggle('showing-breakdown');
+            breakdownBtn.textContent = isShowing ? 'Ocultar breakdown' : 'Ver Breakdown';
+        });
+
+        // --- Slider de comparación ---
+        function splitFromClientX(clientX) {
+            const rect = compareSliderEl.getBoundingClientRect();
+            const percent = ((clientX - rect.left) / rect.width) * 100;
+            setSplit(percent);
+        }
+
+        let dragging = false;
+        compareHandle.addEventListener('pointerdown', (e) => {
+            dragging = true;
+            compareHandle.setPointerCapture(e.pointerId);
+        });
+        compareSliderEl.addEventListener('pointerdown', (e) => {
+            if (compareHandle.contains(e.target)) return;
+            splitFromClientX(e.clientX);
+            dragging = true;
+        });
+        window.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            splitFromClientX(e.clientX);
+        });
+        window.addEventListener('pointerup', () => { dragging = false; });
+
+        compareHandle.addEventListener('keydown', (e) => {
+            const current = parseFloat(compareSliderEl.style.getPropertyValue('--split')) || 50;
+            if (e.key === 'ArrowLeft') {
+                setSplit(current - 5);
+                e.preventDefault();
+            } else if (e.key === 'ArrowRight') {
+                setSplit(current + 5);
+                e.preventDefault();
+            }
+        });
+
+        // ============================================================
+        // 4. ABRIR MODAL DESDE LAS CARDS Y BOTONES "Ver más"
+        // ============================================================
+        // Clic en la propia card
+        document.querySelectorAll('.portfolio-card').forEach((card) => {
             const project = card.dataset.project;
             if (project) {
-                card.addEventListener('click', () => {
-                    updateSpotlight(project);
+                card.addEventListener('click', (e) => {
+                    // Si el clic fue en el botón, no hacer doble apertura
+                    if (e.target.classList.contains('card-btn')) return;
                     openModal(project);
                 });
                 card.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        updateSpotlight(project);
                         openModal(project);
                     }
                 });
             }
         });
 
-        if (portfolioCards.length > 0) {
-            const firstProject = portfolioCards[0].dataset.project;
-            if (firstProject) updateSpotlight(firstProject);
-        }
-
-        // ============================================================
-        // 3b. MODAL — vista grande + slider de breakdown
-        // ============================================================
-        const modal = document.getElementById('projectModal');
-        if (modal) {
-            const modalPanel = modal.querySelector('.project-modal-panel');
-            const modalTitleEl = modal.querySelector('.modal-title');
-            const modalDescEl = modal.querySelector('.modal-desc');
-            const modalTagsEl = modal.querySelector('.modal-tags');
-            const modalFinalView = modal.querySelector('.modal-final-view');
-            const compareSliderEl = modal.querySelector('.compare-slider');
-            const compareBeforeEl = modal.querySelector('.compare-before');
-            const compareAfterEl = modal.querySelector('.compare-after');
-            const compareHandle = modal.querySelector('.compare-handle');
-            const breakdownBtn = modal.querySelector('.modal-breakdown-btn');
-            let lastFocused = null;
-
-            function setSplit(percent) {
-                const clamped = Math.max(0, Math.min(100, percent));
-                compareSliderEl.style.setProperty('--split', clamped + '%');
-                compareHandle.setAttribute('aria-valuenow', String(Math.round(clamped)));
+        // Clic en el botón "Ver más" dentro de cada card
+        document.querySelectorAll('.card-btn').forEach((btn) => {
+            const project = btn.dataset.project;
+            if (project) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Evita que el clic en el botón también dispare el evento de la card
+                    openModal(project);
+                });
             }
-
-            function onKeydown(e) {
-                if (e.key === 'Escape') closeModal();
-            }
-
-            function openModal(projectKey) {
-                const data = projectsData[projectKey];
-                if (!data) return;
-
-                lastFocused = document.activeElement;
-
-                modalTitleEl.textContent = data.title;
-                modalDescEl.textContent = data.desc;
-                modalTagsEl.innerHTML = data.tags.map((t) => `<li>${t}</li>`).join('');
-                modalFinalView.style.backgroundImage = data.final;
-                compareBeforeEl.style.backgroundImage = data.clay;
-                compareAfterEl.style.backgroundImage = data.final;
-
-                modal.classList.remove('showing-breakdown');
-                setSplit(50);
-                breakdownBtn.textContent = 'Ver Breakdown';
-
-                modal.classList.add('open');
-                modal.setAttribute('aria-hidden', 'false');
-                document.body.classList.add('no-scroll');
-                document.addEventListener('keydown', onKeydown);
-
-                requestAnimationFrame(() => modalPanel.focus());
-            }
-
-            function closeModal() {
-                modal.classList.remove('open');
-                modal.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('no-scroll');
-                document.removeEventListener('keydown', onKeydown);
-                if (lastFocused && typeof lastFocused.focus === 'function') {
-                    lastFocused.focus();
-                }
-            }
-
-            modal.querySelectorAll('[data-modal-close]').forEach((el) => {
-                el.addEventListener('click', closeModal);
-            });
-
-            breakdownBtn.addEventListener('click', () => {
-                const isShowing = modal.classList.toggle('showing-breakdown');
-                breakdownBtn.textContent = isShowing ? 'Ocultar breakdown' : 'Ver Breakdown';
-            });
-
-            // Slider de comparación (arrastrar)
-            function splitFromClientX(clientX) {
-                const rect = compareSliderEl.getBoundingClientRect();
-                const percent = ((clientX - rect.left) / rect.width) * 100;
-                setSplit(percent);
-            }
-
-            let dragging = false;
-
-            compareHandle.addEventListener('pointerdown', (e) => {
-                dragging = true;
-                compareHandle.setPointerCapture(e.pointerId);
-            });
-            compareSliderEl.addEventListener('pointerdown', (e) => {
-                if (compareHandle.contains(e.target)) return;
-                splitFromClientX(e.clientX);
-                dragging = true;
-            });
-            window.addEventListener('pointermove', (e) => {
-                if (!dragging) return;
-                splitFromClientX(e.clientX);
-            });
-            window.addEventListener('pointerup', () => {
-                dragging = false;
-            });
-
-            compareHandle.addEventListener('keydown', (e) => {
-                const current = parseFloat(compareSliderEl.style.getPropertyValue('--split')) || 50;
-                if (e.key === 'ArrowLeft') {
-                    setSplit(current - 5);
-                    e.preventDefault();
-                } else if (e.key === 'ArrowRight') {
-                    setSplit(current + 5);
-                    e.preventDefault();
-                }
-            });
-        }
+        });
     }
 
     // ============================================================
-    // 4. MENÚ MÓVIL
+    // 5. MENÚ MÓVIL
     // ============================================================
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
-
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => {
             const isOpen = navLinks.classList.toggle('open');
             menuToggle.setAttribute('aria-expanded', isOpen);
         });
-
         navLinks.querySelectorAll('a').forEach((link) => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('open');
@@ -523,42 +450,30 @@
     }
 
     // ============================================================
-    // 5. FORMULARIO DE CONTACTO
+    // 6. FORMULARIO DE CONTACTO
     // ============================================================
     const form = document.getElementById('contactForm');
     if (form) {
         const feedback = form.querySelector('.form-feedback');
-
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-
             const name = form.querySelector('#name').value.trim();
             const type = form.querySelector('#commissionType').value;
             const message = form.querySelector('#message').value.trim();
-
             if (!name || !type || !message) {
                 feedback.textContent = '⚠️ Por favor, completa todos los campos obligatorios.';
                 feedback.style.color = '#E07B5A';
                 return;
             }
-
             feedback.textContent = '✉️ ¡Mensaje enviado! Te responderé pronto.';
             feedback.style.color = 'var(--accent)';
             form.reset();
-
-            setTimeout(() => {
-                feedback.textContent = '';
-            }, 5000);
+            setTimeout(() => { feedback.textContent = ''; }, 5000);
         });
     }
 
     // ============================================================
-    // 6. ACCESIBILIDAD
-    // ============================================================
-    // (Ya está todo cubierto por prefers-reduced-motion y canHover)
-
-    // ============================================================
-    // 7. ENFOQUE AL INICIO (siempre arriba)
+    // 7. ENFOQUE AL INICIO
     // ============================================================
     if (window.location.hash) {
         history.replaceState(null, '', window.location.pathname + window.location.search);
