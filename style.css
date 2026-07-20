@@ -740,7 +740,7 @@ img, svg { display: block; }
 }
 
 /* ============================================================
-   MODAL DE PROYECTO
+   MODAL DE PROYECTO (IMAGEN GRANDE, FOCO PRINCIPAL)
    ============================================================ */
 body.no-scroll { overflow: hidden; }
 
@@ -751,7 +751,7 @@ body.no-scroll { overflow: hidden; }
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 20px;
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s var(--transition), visibility 0s linear 0.3s;
@@ -764,7 +764,7 @@ body.no-scroll { overflow: hidden; }
 .project-modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(10, 10, 12, 0.8);
+    background: rgba(10, 10, 12, 0.85);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
@@ -772,13 +772,14 @@ body.no-scroll { overflow: hidden; }
     position: relative;
     background: var(--bg-secondary);
     border: 1px solid var(--border-light);
-    max-width: 900px;
+    max-width: 1200px;
     width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
     clip-path: polygon(0 14px, 14px 0, 100% 0, 100% 100%, 0 100%);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
-    transform: translateY(18px) scale(0.97);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+    transform: translateY(20px) scale(0.96);
     opacity: 0;
     transition: transform 0.35s var(--transition), opacity 0.35s var(--transition);
 }
@@ -792,13 +793,13 @@ body.no-scroll { overflow: hidden; }
     position: absolute;
     top: 14px;
     right: 14px;
-    z-index: 3;
-    width: 34px;
-    height: 34px;
-    background: rgba(21, 22, 26, 0.85);
+    z-index: 4;
+    width: 36px;
+    height: 36px;
+    background: rgba(21, 22, 26, 0.9);
     color: var(--text-primary);
     border: 1px solid var(--border-light);
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     line-height: 1;
     cursor: pointer;
     clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
@@ -811,12 +812,17 @@ body.no-scroll { overflow: hidden; }
     }
 }
 
+/* --- Contenedor de la imagen (ocupa la mayor parte) --- */
 .project-modal-media {
     position: relative;
-    height: 340px;
+    flex: 1 1 auto;
+    min-height: 400px;
+    height: 65vh;
+    max-height: 75vh;
     background: var(--bg-primary);
     overflow: hidden;
 }
+
 .modal-final-view {
     position: absolute;
     inset: 0;
@@ -830,6 +836,7 @@ body.no-scroll { overflow: hidden; }
     pointer-events: none;
 }
 
+/* --- Slider de comparación (ocupa el mismo espacio) --- */
 .compare-slider {
     position: absolute;
     inset: 0;
@@ -852,7 +859,7 @@ body.no-scroll { overflow: hidden; }
     background-repeat: no-repeat;
     display: flex;
     align-items: flex-end;
-    padding: 12px 16px;
+    padding: 16px 20px;
 }
 .compare-before {
     clip-path: inset(0 calc(100% - var(--split)) 0 0);
@@ -863,12 +870,12 @@ body.no-scroll { overflow: hidden; }
 }
 .compare-label {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--text-primary);
-    background: rgba(21, 22, 26, 0.75);
-    padding: 3px 10px;
+    background: rgba(21, 22, 26, 0.8);
+    padding: 4px 12px;
     border: 1px solid var(--border-light);
 }
 .compare-handle {
@@ -896,15 +903,15 @@ body.no-scroll { overflow: hidden; }
 .compare-handle-grip {
     position: relative;
     z-index: 1;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--accent);
     color: #15161A;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 1.1rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     border: 2px solid var(--accent-light);
     cursor: grab;
@@ -915,38 +922,63 @@ body.no-scroll { overflow: hidden; }
     outline-offset: 2px;
 }
 
+/* --- Información compacta abajo --- */
 .project-modal-info {
-    padding: 24px 28px 28px;
+    padding: 16px 28px 20px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-light);
+    flex-shrink: 0;
 }
 .modal-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 .modal-desc {
     color: var(--text-secondary);
-    margin-bottom: 14px;
-    max-width: 560px;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    max-width: 600px;
 }
 .modal-tags {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 .modal-tags li {
     background: var(--bg-primary);
-    padding: 2px 12px;
+    padding: 2px 10px;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text-secondary);
     border: 1px solid var(--border-light);
     clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
 }
+.modal-breakdown-btn {
+    font-size: 0.8rem;
+    padding: 6px 16px;
+}
 
-@media (max-width: 600px) {
-    .project-modal { padding: 12px; }
-    .project-modal-media { height: 220px; }
-    .project-modal-info { padding: 20px 18px 24px; }
+@media (max-width: 768px) {
+    .project-modal-media {
+        min-height: 300px;
+        height: 55vh;
+    }
+    .project-modal-info {
+        padding: 12px 18px 16px;
+    }
+    .modal-title { font-size: 1.1rem; }
+    .modal-desc { font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+    .project-modal { padding: 10px; }
+    .project-modal-media {
+        min-height: 220px;
+        height: 45vh;
+    }
+    .compare-label { font-size: 0.6rem; padding: 2px 8px; }
+    .compare-handle-grip { width: 30px; height: 30px; font-size: 0.8rem; }
 }
