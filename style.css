@@ -32,6 +32,7 @@ html {
     background: var(--bg-primary);
 }
 
+/* ----- BLOQUEO INICIAL DEL SCROLL ----- */
 body {
     font-family: var(--font-body);
     background: transparent;
@@ -42,11 +43,18 @@ body {
     margin: 0 auto;
     min-height: 100vh;
     position: relative;
+    overflow: hidden; /* ← Impide scroll al cargar */
+    height: 100vh;    /* ← Fija la altura al viewport */
 }
 
-/* ============================================================
-   FONDO DINÁMICO
-   ============================================================ */
+body.scroll-unlocked {
+    overflow: auto;   /* ← Se desbloquea al hacer clic en "Ver builds" */
+    height: auto;
+    min-height: 100vh;
+}
+/* ------------------------------------- */
+
+/* Resto de estilos... (igual que antes) */
 #bg-canvas {
     position: fixed;
     inset: 0;
@@ -77,9 +85,6 @@ a:hover {
 }
 img, svg { display: block; }
 
-/* ============================================================
-   LOADBAR
-   ============================================================ */
 .loadbar {
     position: fixed;
     top: 0;
@@ -111,9 +116,6 @@ img, svg { display: block; }
     transform: scaleX(1);
 }
 
-/* ============================================================
-   NAV
-   ============================================================ */
 .nav {
     padding: 20px 0 16px;
     border-bottom: 1px solid transparent;
@@ -202,9 +204,6 @@ img, svg { display: block; }
     transition: all 0.2s var(--transition);
 }
 
-/* ============================================================
-   HERO
-   ============================================================ */
 .hero {
     padding: 32px 0 60px;
     text-align: center;
@@ -288,9 +287,6 @@ img, svg { display: block; }
     flex-wrap: wrap;
 }
 
-/* ============================================================
-   BOTONES
-   ============================================================ */
 .btn {
     display: inline-block;
     padding: 10px 28px;
@@ -389,9 +385,6 @@ img, svg { display: block; }
     .btn-primary:hover { filter: brightness(1.05); }
 }
 
-/* ============================================================
-   SECCIONES
-   ============================================================ */
 .section {
     padding: 48px 0 60px;
     border-top: 1px solid var(--border-light);
@@ -425,9 +418,6 @@ img, svg { display: block; }
     font-size: 1.05rem;
 }
 
-/* ============================================================
-   GRIDS
-   ============================================================ */
 .grid {
     display: grid;
     gap: 24px;
@@ -439,9 +429,6 @@ img, svg { display: block; }
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
-/* ============================================================
-   CARDS (con botón "Ver más")
-   ============================================================ */
 .card {
     background: var(--bg-card);
     background-image: linear-gradient(145deg, var(--bg-card), var(--bg-secondary));
@@ -460,7 +447,7 @@ img, svg { display: block; }
     display: flex;
     flex-direction: column;
 }
-.card::after { display: none; } /* eliminamos el efecto de radar */
+.card::after { display: none; }
 
 .card::before {
     content: '';
@@ -524,13 +511,11 @@ img, svg { display: block; }
     margin-bottom: 12px;
 }
 
-/* Botón dentro de la card */
 .card-btn {
     align-self: flex-start;
     margin-top: 4px;
 }
 
-/* Efecto hover mejorado */
 @media (hover: hover) and (pointer: fine) {
     .card:hover {
         background: var(--bg-card-hover);
@@ -542,12 +527,8 @@ img, svg { display: block; }
     .portfolio-card { cursor: pointer; }
 }
 
-/* Estilos para cards de servicios (sin botón) */
 .service-card .card-btn { display: none; }
 
-/* ============================================================
-   ABOUT / CRAFTING TABLE
-   ============================================================ */
 .about-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -601,9 +582,6 @@ img, svg { display: block; }
     min-width: 28px;
 }
 
-/* ============================================================
-   CONTACTO
-   ============================================================ */
 .contact-form {
     max-width: 600px;
     margin: 0 auto;
@@ -646,9 +624,6 @@ img, svg { display: block; }
     min-height: 24px;
 }
 
-/* ============================================================
-   FOOTER
-   ============================================================ */
 .footer {
     padding: 32px 0 40px;
     border-top: 1px solid var(--border-light);
@@ -669,9 +644,6 @@ img, svg { display: block; }
 }
 .footer-coords span { opacity: 0.6; }
 
-/* ============================================================
-   SCROLL REVEAL
-   ============================================================ */
 .reveal {
     opacity: 0;
     transform: translateY(20px);
@@ -688,27 +660,19 @@ img, svg { display: block; }
     transition-delay: calc(var(--index, 0) * 40ms);
 }
 
-/* ============================================================
-   REDUCED MOTION
-   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
     .loadbar, .loadbar .bar-fill, .reveal, .card, .btn, .hero-anim,
     .hero-avatar-float, .hero-avatar-svg, .nav, .section-title::after,
-    #bg-canvas, .spotlight-img, .btn-glow, .card-image::after,
-    .spotlight::before, .cursor-glow, .project-modal-panel {
+    #bg-canvas, .btn-glow, .card-image::after, .cursor-glow, .project-modal-panel {
         transition: none !important;
         animation: none !important;
         transform: none !important;
         opacity: 1 !important;
     }
     .loadbar { display: none; }
-    .card::after { display: none; }
     .cursor-glow { display: none !important; }
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -739,9 +703,6 @@ img, svg { display: block; }
     .service-grid { grid-template-columns: 1fr; }
 }
 
-/* ============================================================
-   MODAL DE PROYECTO (IMAGEN GRANDE, FOCO PRINCIPAL)
-   ============================================================ */
 body.no-scroll { overflow: hidden; }
 
 .project-modal {
@@ -812,7 +773,6 @@ body.no-scroll { overflow: hidden; }
     }
 }
 
-/* --- Contenedor de la imagen (ocupa la mayor parte) --- */
 .project-modal-media {
     position: relative;
     flex: 1 1 auto;
@@ -822,7 +782,6 @@ body.no-scroll { overflow: hidden; }
     background: var(--bg-primary);
     overflow: hidden;
 }
-
 .modal-final-view {
     position: absolute;
     inset: 0;
@@ -836,7 +795,6 @@ body.no-scroll { overflow: hidden; }
     pointer-events: none;
 }
 
-/* --- Slider de comparación (ocupa el mismo espacio) --- */
 .compare-slider {
     position: absolute;
     inset: 0;
@@ -922,7 +880,6 @@ body.no-scroll { overflow: hidden; }
     outline-offset: 2px;
 }
 
-/* --- Información compacta abajo --- */
 .project-modal-info {
     padding: 16px 28px 20px;
     background: var(--bg-secondary);
