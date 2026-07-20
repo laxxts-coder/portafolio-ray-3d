@@ -302,18 +302,17 @@
         const spotlightTags = spotlight.querySelector('.spotlight-tags');
         const clayImg = spotlight.querySelector('.clay');
         const finalImg = spotlight.querySelector('.final');
-        const verMasBtn = document.getElementById('verMasBtn');
         const portfolioCards = document.querySelectorAll('.portfolio-card');
         let currentSpotlightKey = null;
 
-        // Data de proyectos (reemplaza los gradientes por tus imágenes reales)
+        // 👇 Data de proyectos — REEMPLAZA los gradientes por tus imágenes reales
         const projectsData = {
             forest: {
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg)',
-                final: 'url(assets/forest.jpg)',
+                clay: 'linear-gradient(135deg, #2e2e2e, #1a1a1a)', // ← cámbialo por: 'url(assets/proyectos/forest-clay.jpg)'
+                final: 'linear-gradient(135deg, #3d2a1a, #221510)', // ← cámbialo por: 'url(assets/proyectos/forest-final.jpg)'
                 link: '#',
             },
             pool: {
@@ -362,7 +361,6 @@
                 spotlightTags.innerHTML = data.tags.map(t => `<li>${t}</li>`).join('');
                 clayImg.style.backgroundImage = data.clay;
                 finalImg.style.backgroundImage = data.final;
-                verMasBtn.href = data.link;
 
                 spotlightTitle.style.opacity = '1';
                 spotlightDesc.style.opacity = '1';
@@ -371,16 +369,19 @@
             }, 150);
         }
 
+        // 👇 Al hacer clic en una tarjeta: actualiza spotlight + abre modal
         portfolioCards.forEach((card) => {
             const project = card.dataset.project;
             if (project) {
                 card.addEventListener('click', () => {
                     updateSpotlight(project);
+                    openModal(project);
                 });
                 card.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         updateSpotlight(project);
+                        openModal(project);
                     }
                 });
             }
@@ -461,13 +462,6 @@
                 const isShowing = modal.classList.toggle('showing-breakdown');
                 breakdownBtn.textContent = isShowing ? 'Ocultar breakdown' : 'Ver Breakdown';
             });
-
-            if (verMasBtn) {
-                verMasBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (currentSpotlightKey) openModal(currentSpotlightKey);
-                });
-            }
 
             // Slider de comparación (arrastrar)
             function splitFromClientX(clientX) {
