@@ -26,7 +26,6 @@
     --transition: cubic-bezier(0.23, 1, 0.32, 1);
     --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.6);
     --radius-card: 0;
-    /* sin border-radius, usamos chamfer en los elementos */
 }
 
 html {
@@ -247,9 +246,7 @@ svg {
 }
 
 /* ============================================================
-   CURSOR GLOW GLOBAL (torch light que sigue el cursor en TODA
-   la página, no solo en el hero — creado por JS, position:fixed
-   así que nunca se corta ni se desalinea)
+   CURSOR GLOW GLOBAL
    ============================================================ */
 .cursor-glow {
     position: fixed;
@@ -297,7 +294,7 @@ svg {
     50% { transform: translateY(-7px); }
 }
 
-/* Entrada escalonada de los elementos del hero */
+/* Entrada escalonada */
 .hero-anim {
     opacity: 0;
     transform: translateY(16px);
@@ -340,7 +337,7 @@ svg {
 }
 
 /* ============================================================
-   BOTONES (estilo Minecraft biselado)
+   BOTONES
    ============================================================ */
 .btn {
     display: inline-block;
@@ -360,7 +357,6 @@ svg {
     text-align: center;
     position: relative;
     border-radius: 0;
-    /* esquinas rectas, el bisel da la sensación Minecraft */
     text-decoration: none;
     overflow: hidden;
 }
@@ -517,22 +513,40 @@ svg {
 }
 
 /* ============================================================
-   CARDS (con chamfer en una esquina)
+   CARDS (con chamfer, borde glow y más estilo)
    ============================================================ */
 .card {
     background: var(--bg-card);
+    background-image: linear-gradient(145deg, var(--bg-card), var(--bg-secondary));
     padding: 20px 20px 24px;
     box-shadow: var(--shadow-card);
     transition: transform 0.25s var(--transition), box-shadow 0.25s var(--transition), background 0.15s var(--transition);
     position: relative;
     border: 1px solid var(--border-light);
-    /* Chamfer sutil en esquina superior izquierda */
     clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
     --mx: 50%;
     --my: 50%;
     --rx: 0deg;
     --ry: 0deg;
     transform: perspective(800px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(0) translateZ(0);
+}
+
+/* Borde glow animado en hover */
+.card::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    background: conic-gradient(from var(--spin-angle, 0deg), transparent 0deg 220deg, var(--accent-light) 260deg, transparent 300deg);
+    clip-path: polygon(0 8px, 8px 0, 100% 0, 100% 100%, 0 100%);
+    opacity: 0;
+    transition: opacity 0.3s var(--transition);
+    animation: spinGlowCard 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes spinGlowCard {
+    to { --spin-angle: 360deg; }
 }
 
 .card::before {
@@ -572,7 +586,7 @@ svg {
     }
 }
 
-/* Proyecto que se está mostrando actualmente en el spotlight */
+/* Proyecto activo en spotlight */
 .portfolio-card.is-active {
     border-color: var(--accent);
     box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(176, 141, 87, 0.3);
@@ -636,11 +650,14 @@ svg {
 @media (hover: hover) and (pointer: fine) {
     .card:hover {
         background: var(--bg-card-hover);
-        transform: perspective(800px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(-4px) translateZ(0);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+        transform: perspective(800px) rotateX(var(--ry)) rotateY(var(--rx)) translateY(-6px) translateZ(0);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--accent-light);
     }
     .card:hover::before {
         opacity: 1;
+    }
+    .card:hover::after {
+        opacity: 0.7;
     }
     .portfolio-card {
         cursor: pointer;
@@ -1084,6 +1101,7 @@ svg {
         grid-template-columns: 1fr;
     }
 }
+
 /* ============================================================
    MODAL DE PROYECTO (vista grande + slider de breakdown)
    ============================================================ */
@@ -1170,13 +1188,16 @@ body.no-scroll {
     position: relative;
     height: 340px;
     background: var(--bg-primary);
+    overflow: hidden;
 }
 
+/* --- Vista final (fondo) --- */
 .modal-final-view {
     position: absolute;
     inset: 0;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     transition: opacity 0.3s var(--transition);
 }
 
@@ -1205,11 +1226,21 @@ body.no-scroll {
 .compare-layer {
     position: absolute;
     inset: 0;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     align-items: flex-end;
     padding: 12px 16px;
+}
+
+.compare-before {
+    clip-path: inset(0 calc(100% - var(--split)) 0 0);
+    z-index: 2;
+}
+
+.compare-after {
+    z-index: 1;
 }
 
 .compare-label {
@@ -1223,10 +1254,6 @@ body.no-scroll {
     border: 1px solid var(--border-light);
 }
 
-.compare-before {
-    clip-path: inset(0 calc(100% - var(--split)) 0 0);
-}
-
 .compare-handle {
     position: absolute;
     top: 0;
@@ -1238,6 +1265,7 @@ body.no-scroll {
     align-items: center;
     justify-content: center;
     touch-action: none;
+    z-index: 3;
 }
 
 .compare-handle::before {
