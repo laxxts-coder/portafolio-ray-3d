@@ -18,10 +18,10 @@
 </head>
 <body>
 
-    <!-- Loadbar (generando chunk) -->
+    <!-- Loadbar -->
     <div class="loadbar" role="progressbar" aria-label="Cargando portafolio" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
-    <!-- FONDO DINÁMICO (voxels ambientales) -->
+    <!-- Fondo dinámico -->
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div class="bg-vignette" aria-hidden="true"></div>
 
@@ -42,7 +42,7 @@
     </header>
 
     <main>
-        <!-- SPAWN / HERO -->
+        <!-- HERO -->
         <section class="hero" id="spawn">
             <div class="hero-glow" aria-hidden="true"></div>
             <div class="hero-content">
@@ -75,58 +75,45 @@
                 <p class="section-sub">Proyectos destacados</p>
             </div>
             <div class="grid portfolio-grid">
-                <article class="card portfolio-card reveal" data-project="forest" role="button" tabindex="0" aria-label="Abrir caso de estudio: Forest">
-                    <div class="card-image" style="background-image: url(assets/forest-thumb.jpg)">
+                <!-- Card Forest -->
+                <article class="card portfolio-card reveal" data-project="forest" role="button" tabindex="0">
+                    <div class="card-image" style="background-image: linear-gradient(135deg, #2d3a2a, #1a2218);">
                         <span class="card-tag">Ambiente</span>
                     </div>
                     <h3 class="card-title">Forest</h3>
                     <p class="card-desc">Render realista de bosque oscuro</p>
+                    <button class="btn btn-primary btn-sm card-btn" data-project="forest">Ver más</button>
                 </article>
-                <article class="card portfolio-card reveal" data-project="pool" role="button" tabindex="0" aria-label="Abrir caso de estudio: Pool">
+
+                <!-- Card Pool -->
+                <article class="card portfolio-card reveal" data-project="pool" role="button" tabindex="0">
                     <div class="card-image" style="background-image: linear-gradient(135deg, #1e3a4a, #0f222b);">
                         <span class="card-tag">Ambiente</span>
                     </div>
                     <h3 class="card-title">Pool</h3>
                     <p class="card-desc">Piscina con iluminación volumétrica</p>
+                    <button class="btn btn-primary btn-sm card-btn" data-project="pool">Ver más</button>
                 </article>
-                <article class="card portfolio-card reveal" data-project="hide" role="button" tabindex="0" aria-label="Abrir caso de estudio: Hide and Seek">
+
+                <!-- Card Hide and Seek -->
+                <article class="card portfolio-card reveal" data-project="hide" role="button" tabindex="0">
                     <div class="card-image" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
                         <span class="card-tag">Modelado</span>
                     </div>
                     <h3 class="card-title">Hide and Seek</h3>
                     <p class="card-desc">Escena de persecución en Blockbench</p>
+                    <button class="btn btn-primary btn-sm card-btn" data-project="hide">Ver más</button>
                 </article>
-                <article class="card portfolio-card reveal" data-project="circle" role="button" tabindex="0" aria-label="Abrir caso de estudio: El Circulo BerSty">
+
+                <!-- Card El Circulo BerSty -->
+                <article class="card portfolio-card reveal" data-project="circle" role="button" tabindex="0">
                     <div class="card-image" style="background-image: linear-gradient(135deg, #2a1e3a, #171022);">
                         <span class="card-tag">Animación</span>
                     </div>
                     <h3 class="card-title">El Circulo BerSty</h3>
                     <p class="card-desc">Ciclo animado con estilo gráfico</p>
+                    <button class="btn btn-primary btn-sm card-btn" data-project="circle">Ver más</button>
                 </article>
-            </div>
-
-            <!-- SPOTLIGHT (case study) -->
-            <div class="spotlight reveal" id="spotlight" role="region" aria-label="Detalle del proyecto">
-                <div class="spotlight-inner">
-                    <div class="spotlight-images">
-                        <div class="spotlight-img clay" style="background-image: linear-gradient(135deg, #2e2e2e, #1a1a1a);">
-                            <span>Blockout / Clay</span>
-                        </div>
-                        <div class="spotlight-img final" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
-                            <span>Render final</span>
-                        </div>
-                    </div>
-                    <div class="spotlight-content">
-                        <h3 class="spotlight-title">Forest</h3>
-                        <p class="spotlight-desc">Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.</p>
-                        <ul class="spotlight-tags">
-                            <li>Blender</li>
-                            <li>Blockbench</li>
-                            <li>Cycles</li>
-                        </ul>
-                        <!-- ELIMINADO: botón "Ver más" -->
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -241,7 +228,7 @@
         </p>
     </footer>
 
-    <!-- MODAL: vista grande del proyecto + slider de breakdown -->
+    <!-- MODAL: vista grande + slider de breakdown -->
     <div class="project-modal" id="projectModal" aria-hidden="true">
         <div class="project-modal-backdrop" data-modal-close></div>
         <div class="project-modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
