@@ -230,11 +230,11 @@
 
     <!-- MODAL: imagen gigante + info cristal superpuesta -->
     <div class="project-modal" id="projectModal" aria-hidden="true">
+        <!-- La X de cerrar ahora está fuera de la tarjeta, fija en la ventana -->
+        <button class="project-modal-close" type="button" aria-label="Cerrar" data-modal-close>&times;</button>
+        
         <div class="project-modal-backdrop" data-modal-close></div>
         <div class="project-modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
-            <!-- La X de cerrar ahora está fija fuera de la imagen -->
-            <button class="project-modal-close" type="button" aria-label="Cerrar" data-modal-close>&times;</button>
-
             <div class="project-modal-media">
                 <div class="modal-final-view" id="modalFinalView"></div>
                 <div class="compare-slider" id="compareSlider">
