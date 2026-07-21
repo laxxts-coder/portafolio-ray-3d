@@ -72,14 +72,18 @@ body.scroll-enabled {
         linear-gradient(to bottom, rgba(21, 22, 26, 0.15) 0%, rgba(21, 22, 26, 0.55) 45%, var(--bg-primary) 92%);
 }
 
+/* ============================================================
+   CANVAS DE FÍSICAS (objetos interactivos)
+   ============================================================ */
 #physics-canvas {
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 9999;          /* Muy alto para estar encima de todo */
-    pointer-events: none;   /* Para que no bloquee clics */
+    z-index: 5;
+    pointer-events: auto; /* ← CAMBIADO: ahora captura eventos */
     display: block;
+    touch-action: none; /* Evita scroll al arrastrar en móviles */
 }
 
 /* ============================================================
