@@ -811,7 +811,6 @@ body.no-scroll { overflow: hidden; }
     font-size: 1.8rem;
     line-height: 1;
     cursor: pointer;
-    /* Eliminamos clip-path para que sea completamente visible */
     border-radius: 4px;
     transition: background 0.15s var(--transition), transform 0.15s var(--transition);
     opacity: 0;
@@ -959,7 +958,9 @@ body.no-scroll { overflow: hidden; }
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     z-index: 5;
-    transition: opacity 0.3s var(--transition), padding 0.3s var(--transition);
+    transition: padding 0.3s var(--transition);
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-title {
@@ -997,10 +998,10 @@ body.no-scroll { overflow: hidden; }
     background: rgba(21, 22, 26, 0.5);
     backdrop-filter: blur(4px);
     border: 1px solid var(--border-light);
+    align-self: flex-start;
 }
 
 /* --- Comportamiento al activar breakdown --- */
-/* Ocultamos título, descripción y tags, pero el botón se mantiene visible */
 .project-modal.showing-breakdown .project-modal-info .modal-title,
 .project-modal.showing-breakdown .project-modal-info .modal-desc,
 .project-modal.showing-breakdown .project-modal-info .modal-tags {
@@ -1013,18 +1014,16 @@ body.no-scroll { overflow: hidden; }
     transition: opacity 0.2s var(--transition), max-height 0.2s var(--transition);
 }
 
-/* El botón permanece visible y centrado */
+/* El botón siempre visible y centrado */
 .project-modal.showing-breakdown .project-modal-info .modal-breakdown-btn {
     opacity: 1 !important;
     pointer-events: auto !important;
-    display: inline-block !important;
+    align-self: center !important;
     margin: 4px auto;
 }
 
-/* Reducimos el padding de la info cuando solo queda el botón */
 .project-modal.showing-breakdown .project-modal-info {
     padding: 10px 20px 12px;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
