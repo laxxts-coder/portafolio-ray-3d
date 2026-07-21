@@ -1003,16 +1003,16 @@ body.no-scroll { overflow: hidden; }
 }
 
 /* --- COMPORTAMIENTO AL ACTIVAR BREAKDOWN --- */
-/* El panel de cristal desaparece visualmente: sin fondo, sin blur, sin borde, sin sombra */
+/* El panel de cristal desaparece visualmente */
 .project-modal.showing-breakdown .project-modal-info {
     background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     border: none !important;
     box-shadow: none !important;
-    padding: 0 !important;
+    padding: 14px 20px 16px !important; /* Mantener el mismo padding */
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* Alinear a la izquierda */
     align-items: center;
 }
 
@@ -1023,11 +1023,11 @@ body.no-scroll { overflow: hidden; }
     display: none !important;
 }
 
-/* El botón se mantiene visible y centrado */
+/* El botón se mantiene visible y alineado a la izquierda */
 .project-modal.showing-breakdown .project-modal-info .modal-breakdown-btn {
     opacity: 1 !important;
     pointer-events: auto !important;
-    margin: 0 auto;
+    margin: 0 !important;
     display: inline-block !important;
 }
 
