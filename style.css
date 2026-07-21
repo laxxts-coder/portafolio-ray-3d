@@ -42,7 +42,7 @@ body {
     margin: 0 auto;
     min-height: 100vh;
     position: relative;
-    overflow: hidden; /* Bloquea el scroll inicialmente */
+    overflow: hidden;
 }
 
 body.scroll-enabled {
@@ -72,6 +72,22 @@ body.scroll-enabled {
         linear-gradient(to bottom, rgba(21, 22, 26, 0.15) 0%, rgba(21, 22, 26, 0.55) 45%, var(--bg-primary) 92%);
 }
 
+/* ============================================================
+   CANVAS DE FÍSICAS (objetos interactivos)
+   ============================================================ */
+#physics-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+}
+
+/* ============================================================
+   RESTO DEL CSS (NAV, HERO, CARDS, MODAL, ETC.)
+   ============================================================ */
 a {
     color: var(--accent);
     text-decoration: none;
@@ -748,19 +764,6 @@ img, svg { display: block; }
 }
 
 /* ============================================================
-   CANVAS DE FÍSICAS (objetos interactivos)
-   ============================================================ */
-#physics-canvas {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-    pointer-events: none;
-    display: block;
-}
-
-/* ============================================================
    MODAL GIGANTE CON INFO CRISTAL SUPERPUESTA
    ============================================================ */
 body.no-scroll { overflow: hidden; }
@@ -1016,7 +1019,6 @@ body.no-scroll { overflow: hidden; }
 }
 
 /* --- COMPORTAMIENTO AL ACTIVAR BREAKDOWN --- */
-/* El panel de cristal desaparece visualmente: sin fondo, sin blur, sin borde, sin sombra */
 .project-modal.showing-breakdown .project-modal-info {
     background: transparent !important;
     backdrop-filter: none !important;
@@ -1025,28 +1027,21 @@ body.no-scroll { overflow: hidden; }
     box-shadow: none !important;
     padding: 0 !important;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
-
-/* Ocultamos título, descripción y tags */
 .project-modal.showing-breakdown .project-modal-info .modal-title,
 .project-modal.showing-breakdown .project-modal-info .modal-desc,
 .project-modal.showing-breakdown .project-modal-info .modal-tags {
     display: none !important;
 }
-
-/* El botón se mantiene visible y alineado a la izquierda */
 .project-modal.showing-breakdown .project-modal-info .modal-breakdown-btn {
     opacity: 1 !important;
     pointer-events: auto !important;
-    margin: 0 !important;
+    margin: 0 auto;
     display: inline-block !important;
-    position: relative;
-    left: 0;
 }
 
-/* Ajustes para móviles */
 @media (max-width: 768px) {
     .project-modal-media {
         min-height: 50vh;
