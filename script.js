@@ -262,7 +262,7 @@
     revealEls.forEach((el) => revealObserver.observe(el));
 
     // ============================================================
-    // 3. MODAL — vista gigante + slider de breakdown
+    // 3. MODAL — vista 16:9 + info cristal
     // ============================================================
     const modal = document.getElementById('projectModal');
     if (modal) {
@@ -477,11 +477,8 @@
     }
     window.scrollTo(0, 0);
 
-    // El scroll ya está bloqueado por CSS (body overflow: hidden)
-    // Función para desbloquear el scroll y mostrar las cards
     function enableScrollAndShowCards() {
         document.body.classList.add('scroll-enabled');
-        // Forzar visibilidad de las cards y el header de #build
         setTimeout(() => {
             document.querySelectorAll('#build .card.reveal').forEach(card => {
                 card.classList.add('visible');
@@ -491,17 +488,13 @@
         }, 300);
     }
 
-    // Al hacer clic en "Ver builds"
     const verBuildsBtn = document.getElementById('verBuildsBtn');
     if (verBuildsBtn) {
         verBuildsBtn.addEventListener('click', function(e) {
-            // No prevenimos el comportamiento por defecto (scroll suave)
-            // Pero desbloqueamos el scroll y mostramos las cards
             enableScrollAndShowCards();
         });
     }
 
-    // Al hacer clic en "Contactar" también desbloqueamos
     const contactBtn = document.getElementById('contactBtn');
     if (contactBtn) {
         contactBtn.addEventListener('click', function(e) {
@@ -509,13 +502,9 @@
         });
     }
 
-    // También desbloqueamos al hacer clic en cualquier enlace del nav
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', function(e) {
             enableScrollAndShowCards();
         });
     });
-
-    // Si el usuario ya tiene scroll habilitado (por ejemplo, si recarga estando abajo), lo forzamos
-    // pero eso no debería pasar porque el scroll está bloqueado por CSS.
 })();
