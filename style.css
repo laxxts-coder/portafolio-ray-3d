@@ -86,17 +86,19 @@ body.scroll-enabled {
 }
 
 /* ============================================================
-   RESTO DEL CSS (NAV, HERO, CARDS, MODAL, ETC.)
+   CANVAS DE FÍSICAS (objetos interactivos)
    ============================================================ */
-a {
-    color: var(--accent);
-    text-decoration: none;
-    transition: color 0.15s var(--transition);
+#physics-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;          /* Por encima de todo para prueba */
+    pointer-events: none; /* Permitir clics en botones, pero el mouse constraint funciona */
+    display: block;
+    /* Fondo de prueba para ver el canvas */
+    /* background: rgba(255,0,0,0.1); */ /* Descomentar para ver si el canvas está presente */
 }
-a:hover {
-    color: var(--accent-light);
-}
-img, svg { display: block; }
 
 /* ============================================================
    LOADBAR
