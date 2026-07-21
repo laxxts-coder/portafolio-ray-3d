@@ -780,7 +780,7 @@ body.no-scroll { overflow: hidden; }
     position: relative;
     background: var(--bg-secondary);
     border: 1px solid var(--border-light);
-    max-width: 1100px; /* ← Ancho más contenido */
+    max-width: 1100px;
     width: 100%;
     max-height: 94vh;
     display: flex;
@@ -797,21 +797,28 @@ body.no-scroll { overflow: hidden; }
 }
 .project-modal-panel:focus { outline: none; }
 
+/* --- X de cerrar: fija fuera de la imagen --- */
 .project-modal-close {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    z-index: 10;
-    width: 38px;
-    height: 38px;
-    background: rgba(21, 22, 26, 0.9);
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 1001;
+    width: 44px;
+    height: 44px;
+    background: rgba(21, 22, 26, 0.92);
     color: var(--text-primary);
     border: 1px solid var(--border-light);
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     line-height: 1;
     cursor: pointer;
     clip-path: polygon(0 4px, 4px 0, 100% 0, 100% 100%, 0 100%);
     transition: background 0.15s var(--transition), transform 0.15s var(--transition);
+    opacity: 0;
+    pointer-events: none;
+}
+.project-modal.open .project-modal-close {
+    opacity: 1;
+    pointer-events: auto;
 }
 @media (hover: hover) and (pointer: fine) {
     .project-modal-close:hover {
@@ -866,17 +873,17 @@ body.no-scroll { overflow: hidden; }
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
-    align-items: flex-start; /* ← Alinear etiquetas arriba */
+    align-items: flex-start;
     padding: 16px 20px;
 }
 .compare-before {
     clip-path: inset(0 calc(100% - var(--split)) 0 0);
     z-index: 2;
-    justify-content: flex-start; /* ← BLOCKOUT a la izquierda */
+    justify-content: flex-start;
 }
 .compare-after {
     z-index: 1;
-    justify-content: flex-end; /* ← FINAL a la derecha */
+    justify-content: flex-end;
 }
 .compare-label {
     font-family: var(--font-mono);
@@ -933,7 +940,7 @@ body.no-scroll { overflow: hidden; }
     outline-offset: 2px;
 }
 
-/* --- INFO SUPERPUESTA CON ESTILO CRISTAL (SIEMPRE VISIBLE) --- */
+/* --- INFO SUPERPUESTA CON ESTILO CRISTAL --- */
 .project-modal-info {
     position: absolute;
     bottom: 20px;
@@ -949,11 +956,7 @@ body.no-scroll { overflow: hidden; }
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     z-index: 5;
     transition: opacity 0.3s var(--transition);
-    /* Siempre visible, no se oscurece */
 }
-
-/* Eliminamos la regla que reducía la opacidad */
-/* .project-modal.showing-breakdown .project-modal-info { opacity: 0.6; } */
 
 .modal-title {
     font-size: 1.1rem;
@@ -992,6 +995,24 @@ body.no-scroll { overflow: hidden; }
     border: 1px solid var(--border-light);
 }
 
+/* Ocultar información (título, descripción, tags) al activar breakdown, pero el botón se mantiene visible */
+.project-modal.showing-breakdown .project-modal-info .modal-title,
+.project-modal.showing-breakdown .project-modal-info .modal-desc,
+.project-modal.showing-breakdown .project-modal-info .modal-tags {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s var(--transition);
+}
+.project-modal.showing-breakdown .project-modal-info .modal-breakdown-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Reducir padding de la info cuando solo está el botón */
+.project-modal.showing-breakdown .project-modal-info {
+    padding: 8px 20px 10px;
+}
+
 @media (max-width: 768px) {
     .project-modal-media {
         min-height: 50vh;
@@ -1006,6 +1027,13 @@ body.no-scroll { overflow: hidden; }
     .modal-title { font-size: 0.95rem; }
     .modal-desc { font-size: 0.7rem; }
     .project-modal-panel { max-width: 100%; }
+    .project-modal-close {
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        font-size: 1.5rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1023,4 +1051,11 @@ body.no-scroll { overflow: hidden; }
         padding: 8px 10px 10px;
     }
     .project-modal-panel { max-width: 100%; }
+    .project-modal-close {
+        top: 10px;
+        right: 10px;
+        width: 32px;
+        height: 32px;
+        font-size: 1.3rem;
+    }
 }
