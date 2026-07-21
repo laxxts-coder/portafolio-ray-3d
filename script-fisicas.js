@@ -20,7 +20,7 @@
 
     console.log('✅ Matter.js cargado correctamente');
 
-    const { Engine, Render, Runner, Bodies, Body, World, Events, Mouse, MouseConstraint, Composite, Bounds } = Matter;
+    const { Engine, Render, Runner, Bodies, Body, World, Events, Mouse, MouseConstraint, Composite, Bounds, Query } = Matter;
 
     const canvas = document.getElementById('physics-canvas');
     if (!canvas) {
@@ -214,52 +214,88 @@
     }
 
     // ============================================================
-    // ARRASTRE MEJORADO CON FILTRO DE EVENTOS
+    // ARRASTRE — el canvas solo "captura" el clic cuando el cursor
+    // está encima de un objeto que cae; el resto del tiempo deja
+    // pasar los clics/enlaces/botones de la página normalmente.
     // ============================================================
     function setupMouseInteraction() {
         console.log('🖱️ Configurando arrastre...');
 
         const mouse = Mouse.create(canvas);
+        // Matter añade sus propios listeners de touch/wheel al canvas;
+        // los quitamos para no interferir con el scroll cuando no se arrastra.
+        canvas.removeEventListener('wheel', mouse.mousewheel);
 
-        // Configurar mouse constraint
         const mouseConstraint = MouseConstraint.create(engine, {
             mouse: mouse,
             constraint: {
-                stiffness: 0.1,
-                damping: 0.1,
+                stiffness: 0.2,
+                damping: 0.15,
                 render: { visible: false }
             }
         });
-
-        // Guardar referencia para el arrastre
-        let isDragging = false;
-
-        // Sobrescribir el evento mousedown para filtrar clics en elementos interactivos
-        const originalMouseDown = mouseConstraint.mouseDown;
-        mouseConstraint.mouseDown = function(event) {
-            // Verificar si el clic fue sobre un botón, enlace o elemento interactivo
-            const target = event.target;
-            if (target.closest('button') || target.closest('a') || target.closest('.card')) {
-                console.log('🖱️ Clic en elemento interactivo, ignorando arrastre');
-                return;
-            }
-
-            // Si no, proceder con el arrastre normal
-            originalMouseDown.call(this, event);
-        };
-
-        // Cuando se suelta el mouse, liberar el cuerpo
-        mouseConstraint.mouseUp = function(event) {
-            if (mouseConstraint.body) {
-                console.log('🖱️ Soltando objeto');
-                mouseConstraint.body = null;
-                mouseConstraint.constraint.bodyB = null;
-            }
-        };
-
         World.add(world, mouseConstraint);
         window.mouseConstraint = mouseConstraint;
-        console.log('✅ Arrastre configurado');
+
+        let isDragging = false;
+
+        function getDraggableBodies() {
+            return world.bodies.filter(b => !b.isStatic);
+        }
+
+        // Convierte la posición del mouse/touch a coordenadas del canvas
+        // (el canvas es fixed, así que clientX/Y ya coinciden con su viewport)
+        function isOverObject(clientX, clientY) {
+            const found = Query.point(getDraggableBodies(), { x: clientX, y: clientY });
+            return found.length > 0;
+        }
+
+        function activateCanvas() {
+            canvas.classList.add('pc-active');
+        }
+        function deactivateCanvas() {
+            canvas.classList.remove('pc-active');
+        }
+
+        // Antes de cada posible interacción, comprobamos si hay un objeto debajo
+        // del cursor. Si sí, activamos pointer-events en el canvas para ese
+        // instante y dejamos que Matter maneje el arrastre normalmente.
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) return;
+            if (isOverObject(e.clientX, e.clientY)) {
+                activateCanvas();
+                canvas.style.cursor = 'grab';
+            } else {
+                deactivateCanvas();
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchstart', (e) => {
+            const t = e.touches[0];
+            if (t && isOverObject(t.clientX, t.clientY)) {
+                activateCanvas();
+            }
+        }, { passive: true });
+
+        Events.on(mouseConstraint, 'startdrag', () => {
+            isDragging = true;
+            activateCanvas();
+            canvas.style.cursor = 'grabbing';
+            console.log('🖱️ Arrastrando objeto');
+        });
+
+        Events.on(mouseConstraint, 'enddrag', () => {
+            isDragging = false;
+            canvas.style.cursor = 'grab';
+            console.log('🖱️ Soltando objeto');
+            // Revisamos si el cursor sigue sobre algún objeto; si no, liberamos el canvas
+            const pos = mouse.position;
+            if (!isOverObject(pos.x, pos.y)) {
+                deactivateCanvas();
+            }
+        });
+
+        console.log('✅ Arrastre configurado (solo activo sobre los objetos)');
     }
 
     // ============================================================
@@ -277,7 +313,17 @@
         console.log('🚀 Física en ejecución');
 
         // Actualizar colisiones con cards cuando cambie el scroll o tamaño
-        window.addEventListener('scroll', updateCardCollisions);
+        // (con throttle vía requestAnimationFrame para no recalcular en cada pixel)
+        let scrollTicking = false;
+        window.addEventListener('scroll', () => {
+            if (!scrollTicking) {
+                requestAnimationFrame(() => {
+                    updateCardCollisions();
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
+            }
+        }, { passive: true });
         window.addEventListener('resize', () => {
             const newWidth = window.innerWidth;
             const newHeight = window.innerHeight;
