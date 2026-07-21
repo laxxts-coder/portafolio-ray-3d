@@ -262,7 +262,7 @@
     revealEls.forEach((el) => revealObserver.observe(el));
 
     // ============================================================
-    // 3. MODAL — vista 16:9 + info cristal
+    // 3. MODAL — vista 16:9 + slider de breakdown
     // ============================================================
     const modal = document.getElementById('projectModal');
     if (modal) {
@@ -284,8 +284,8 @@
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg)', // ← url(assets/proyectos/forest-clay.jpg)
-                final: 'url(assets/forest.jpg)', // ← url(assets/proyectos/forest-final.jpg)
+                clay: 'linear-gradient(135deg, #2e2e2e, #1a1a1a)', // ← url(assets/proyectos/forest-clay.jpg)
+                final: 'linear-gradient(135deg, #3d2a1a, #221510)', // ← url(assets/proyectos/forest-final.jpg)
             },
             pool: {
                 title: 'Pool',
@@ -477,6 +477,7 @@
     }
     window.scrollTo(0, 0);
 
+    // El scroll ya está bloqueado por CSS (body overflow: hidden)
     function enableScrollAndShowCards() {
         document.body.classList.add('scroll-enabled');
         setTimeout(() => {
