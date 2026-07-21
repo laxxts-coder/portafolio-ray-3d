@@ -780,7 +780,7 @@ body.no-scroll { overflow: hidden; }
     position: relative;
     background: var(--bg-secondary);
     border: 1px solid var(--border-light);
-    max-width: 1400px;
+    max-width: 1100px; /* ← Ancho más contenido */
     width: 100%;
     max-height: 94vh;
     display: flex;
@@ -866,15 +866,17 @@ body.no-scroll { overflow: hidden; }
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start; /* ← Alinear etiquetas arriba */
     padding: 16px 20px;
 }
 .compare-before {
     clip-path: inset(0 calc(100% - var(--split)) 0 0);
     z-index: 2;
+    justify-content: flex-start; /* ← BLOCKOUT a la izquierda */
 }
 .compare-after {
     z-index: 1;
+    justify-content: flex-end; /* ← FINAL a la derecha */
 }
 .compare-label {
     font-family: var(--font-mono);
@@ -931,14 +933,14 @@ body.no-scroll { overflow: hidden; }
     outline-offset: 2px;
 }
 
-/* --- INFO SUPERPUESTA CON ESTILO CRISTAL (glassmorphism) --- */
+/* --- INFO SUPERPUESTA CON ESTILO CRISTAL (SIEMPRE VISIBLE) --- */
 .project-modal-info {
     position: absolute;
     bottom: 20px;
     left: 20px;
     right: 20px;
-    max-width: 650px;
-    padding: 16px 22px 18px;
+    max-width: 600px;
+    padding: 14px 20px 16px;
     background: rgba(21, 22, 26, 0.55);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
@@ -947,7 +949,11 @@ body.no-scroll { overflow: hidden; }
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     z-index: 5;
     transition: opacity 0.3s var(--transition);
+    /* Siempre visible, no se oscurece */
 }
+
+/* Eliminamos la regla que reducía la opacidad */
+/* .project-modal.showing-breakdown .project-modal-info { opacity: 0.6; } */
 
 .modal-title {
     font-size: 1.1rem;
@@ -986,11 +992,6 @@ body.no-scroll { overflow: hidden; }
     border: 1px solid var(--border-light);
 }
 
-/* Ocultar la info cuando se muestra el breakdown (opcional, se puede mantener) */
-.project-modal.showing-breakdown .project-modal-info {
-    opacity: 0.6;
-}
-
 @media (max-width: 768px) {
     .project-modal-media {
         min-height: 50vh;
@@ -1000,10 +1001,11 @@ body.no-scroll { overflow: hidden; }
         bottom: 12px;
         left: 12px;
         right: 12px;
-        padding: 12px 16px 14px;
+        padding: 10px 14px 12px;
     }
     .modal-title { font-size: 0.95rem; }
     .modal-desc { font-size: 0.7rem; }
+    .project-modal-panel { max-width: 100%; }
 }
 
 @media (max-width: 480px) {
@@ -1018,6 +1020,7 @@ body.no-scroll { overflow: hidden; }
         bottom: 8px;
         left: 8px;
         right: 8px;
-        padding: 10px 12px 12px;
+        padding: 8px 10px 10px;
     }
+    .project-modal-panel { max-width: 100%; }
 }
