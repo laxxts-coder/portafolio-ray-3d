@@ -72,32 +72,14 @@ body.scroll-enabled {
         linear-gradient(to bottom, rgba(21, 22, 26, 0.15) 0%, rgba(21, 22, 26, 0.55) 45%, var(--bg-primary) 92%);
 }
 
-/* ============================================================
-   CANVAS DE FÍSICAS (objetos interactivos)
-   ============================================================ */
 #physics-canvas {
     position: fixed;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1;
-    pointer-events: none;
+    z-index: 9999;          /* Muy alto para estar encima de todo */
+    pointer-events: none;   /* Para que no bloquee clics */
     display: block;
-}
-
-/* ============================================================
-   CANVAS DE FÍSICAS (objetos interactivos)
-   ============================================================ */
-#physics-canvas {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 10;          /* Por encima de todo para prueba */
-    pointer-events: none; /* Permitir clics en botones, pero el mouse constraint funciona */
-    display: block;
-    /* Fondo de prueba para ver el canvas */
-    /* background: rgba(255,0,0,0.1); */ /* Descomentar para ver si el canvas está presente */
 }
 
 /* ============================================================
