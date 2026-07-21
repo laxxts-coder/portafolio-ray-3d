@@ -228,20 +228,21 @@
         </p>
     </footer>
 
-    <!-- MODAL: vista gigante + slider de breakdown -->
+    <!-- MODAL: imagen gigante + info cristal superpuesta -->
     <div class="project-modal" id="projectModal" aria-hidden="true">
         <div class="project-modal-backdrop" data-modal-close></div>
         <div class="project-modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+            <!-- La X de cerrar ahora está fija fuera de la imagen -->
             <button class="project-modal-close" type="button" aria-label="Cerrar" data-modal-close>&times;</button>
 
             <div class="project-modal-media">
                 <div class="modal-final-view" id="modalFinalView"></div>
                 <div class="compare-slider" id="compareSlider">
                     <div class="compare-layer compare-before" id="compareBefore">
-                        <span class="compare-label">Blockout</span>
+                        <span class="compare-label">BLOCKOUT</span>
                     </div>
                     <div class="compare-layer compare-after" id="compareAfter">
-                        <span class="compare-label">Final</span>
+                        <span class="compare-label">FINAL</span>
                     </div>
                     <div class="compare-handle" id="compareHandle" role="slider" aria-orientation="horizontal"
                         aria-label="Comparar blockout y render final" aria-valuemin="0" aria-valuemax="100"
@@ -249,13 +250,14 @@
                         <span class="compare-handle-grip" aria-hidden="true">&#8596;</span>
                     </div>
                 </div>
-            </div>
 
-            <div class="project-modal-info">
-                <h3 class="modal-title" id="modalTitle"></h3>
-                <p class="modal-desc" id="modalDesc"></p>
-                <ul class="modal-tags" id="modalTags"></ul>
-                <button class="btn btn-secondary btn-sm modal-breakdown-btn" id="breakdownBtn" type="button">Ver Breakdown</button>
+                <!-- INFO SUPERPUESTA CON ESTILO CRISTAL -->
+                <div class="project-modal-info glass">
+                    <h3 class="modal-title" id="modalTitle"></h3>
+                    <p class="modal-desc" id="modalDesc"></p>
+                    <ul class="modal-tags" id="modalTags"></ul>
+                    <button class="btn btn-secondary btn-sm modal-breakdown-btn" id="breakdownBtn" type="button">Ver Breakdown</button>
+                </div>
             </div>
         </div>
     </div>
