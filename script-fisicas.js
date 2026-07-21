@@ -27,7 +27,7 @@
     const engine = Engine.create({ gravity: { x: 0, y: 1.2 } });
     const world = engine.world;
 
-    // --- Renderizador (para que Matter dibuje los objetos en el canvas) ---
+    // --- Renderizador ---
     const render = Render.create({
         canvas: canvas,
         engine: engine,
@@ -43,7 +43,7 @@
         }
     });
 
-    // --- Función para cargar imágenes y convertirlas a texturas de Matter ---
+    // --- Función para cargar imágenes y convertirlas a texturas ---
     function createBodyWithTexture(imgSrc, x, y, w, h, isStatic = false) {
         const img = new Image();
         img.src = imgSrc;
@@ -70,7 +70,7 @@
                 resolve(body);
             };
             img.onerror = function() {
-                // Si no carga, creamos un rectángulo con color de respaldo
+                // Si no carga, crear un rectángulo de respaldo
                 const body = Bodies.rectangle(x, y, 60, 60, {
                     isStatic: isStatic,
                     restitution: 0.5,
@@ -87,16 +87,14 @@
     async function createObjects() {
         const objects = [];
 
-        // Lista de imágenes (rutas relativas a tu proyecto)
+        // Lista de imágenes (AJUSTA LAS RUTAS SEGÚN TUS ARCHIVOS)
         const images = [
             { src: 'assets/objetos/blender.png', label: 'Blender' },
             { src: 'assets/objetos/steve.png', label: 'Steve' },
             { src: 'assets/objetos/creeper.png', label: 'Creeper' },
             { src: 'assets/objetos/minecraft-logo.png', label: 'Minecraft' },
-            // Agrega más aquí
         ];
 
-        // Posiciones iniciales (aleatorias en la parte superior)
         const startX = width * 0.1;
         const endX = width * 0.9;
         const startY = -50;
@@ -109,10 +107,9 @@
             objects.push(body);
         }
 
-        // Agregar todos los cuerpos al mundo
         World.add(world, objects);
 
-        // Crear bordes invisibles para que reboten
+        // Bordes invisibles
         const borderOptions = { isStatic: true, restitution: 0.6, friction: 0.1 };
         const borders = [
             Bodies.rectangle(width/2, -20, width, 40, borderOptions),
@@ -122,7 +119,6 @@
         ];
         World.add(world, borders);
 
-        // Almacenar los objetos para el arrastre
         window.physicsObjects = objects;
     }
 
@@ -140,6 +136,7 @@
         });
 
         mouseConstraint.collisionFilter.mask = 0x0001;
+
         const originalOnMouseDown = mouseConstraint.mouseDown;
         mouseConstraint.mouseDown = function(event) {
             const mousePosition = mouse.position;
@@ -185,7 +182,7 @@
         Runner.run(runner, engine);
     });
 
-    // --- Redimensionar el canvas si cambia el tamaño de la ventana ---
+    // --- Redimensionar ---
     window.addEventListener('resize', function() {
         const newWidth = window.innerWidth;
         const newHeight = window.innerHeight;
