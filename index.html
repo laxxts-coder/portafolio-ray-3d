@@ -25,7 +25,7 @@
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div class="bg-vignette" aria-hidden="true"></div>
 
-    <!-- Canvas para objetos interactivos con físicas -->
+    <!-- ⭐ CANVAS PARA OBJETOS INTERACTIVOS CON FÍSICAS ⭐ -->
     <canvas id="physics-canvas" aria-hidden="true"></canvas>
 
     <!-- NAV -->
@@ -78,7 +78,6 @@
                 <p class="section-sub">Proyectos destacados</p>
             </div>
             <div class="grid portfolio-grid">
-                <!-- Card Forest -->
                 <article class="card portfolio-card reveal" data-project="forest" role="button" tabindex="0">
                     <div class="card-image" style="background-image: linear-gradient(135deg, #2d3a2a, #1a2218);">
                         <span class="card-tag">Ambiente</span>
@@ -88,7 +87,6 @@
                     <button class="btn btn-primary btn-sm card-btn" data-project="forest">Ver más</button>
                 </article>
 
-                <!-- Card Pool -->
                 <article class="card portfolio-card reveal" data-project="pool" role="button" tabindex="0">
                     <div class="card-image" style="background-image: linear-gradient(135deg, #1e3a4a, #0f222b);">
                         <span class="card-tag">Ambiente</span>
@@ -98,7 +96,6 @@
                     <button class="btn btn-primary btn-sm card-btn" data-project="pool">Ver más</button>
                 </article>
 
-                <!-- Card Hide and Seek -->
                 <article class="card portfolio-card reveal" data-project="hide" role="button" tabindex="0">
                     <div class="card-image" style="background-image: linear-gradient(135deg, #3d2a1a, #221510);">
                         <span class="card-tag">Modelado</span>
@@ -108,7 +105,6 @@
                     <button class="btn btn-primary btn-sm card-btn" data-project="hide">Ver más</button>
                 </article>
 
-                <!-- Card El Circulo BerSty -->
                 <article class="card portfolio-card reveal" data-project="circle" role="button" tabindex="0">
                     <div class="card-image" style="background-image: linear-gradient(135deg, #2a1e3a, #171022);">
                         <span class="card-tag">Animación</span>
@@ -231,12 +227,11 @@
         </p>
     </footer>
 
-    <!-- MODAL: imagen gigante + info cristal superpuesta -->
+    <!-- MODAL -->
     <div class="project-modal" id="projectModal" aria-hidden="true">
         <div class="project-modal-backdrop" data-modal-close></div>
         <div class="project-modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
             <button class="project-modal-close" type="button" aria-label="Cerrar" data-modal-close>&times;</button>
-
             <div class="project-modal-media">
                 <div class="modal-final-view" id="modalFinalView"></div>
                 <div class="compare-slider" id="compareSlider">
@@ -252,7 +247,6 @@
                         <span class="compare-handle-grip" aria-hidden="true">&#8596;</span>
                     </div>
                 </div>
-
                 <div class="project-modal-info glass">
                     <h3 class="modal-title" id="modalTitle"></h3>
                     <p class="modal-desc" id="modalDesc"></p>
@@ -263,9 +257,9 @@
         </div>
     </div>
 
-    <!-- LIBRERÍA MATTER.JS (físicas) -->
+    <!-- ⭐ LIBRERÍA MATTER.JS (FÍSICAS) ⭐ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-    <!-- SCRIPT DE FÍSICAS -->
+    <!-- ⭐ SCRIPT DE FÍSICAS ⭐ -->
     <script src="script-fisicas.js" defer></script>
     <!-- SCRIPT PRINCIPAL -->
     <script src="script.js" defer></script>
