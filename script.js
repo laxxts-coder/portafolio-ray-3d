@@ -284,8 +284,8 @@
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg)', // ← url(assets/proyectos/forest-clay.jpg)
-                final: 'url(assets/forest.jpg)', // ← url(assets/proyectos/forest-final.jpg)
+                clay: 'url(assets/proyectos/forest-clay.jpg)', // ← url(assets/proyectos/forest-clay.jpg)
+                final: 'url(assets/proyectos/forest-final.jpg)', // ← url(assets/proyectos/forest-final.jpg)
             },
             pool: {
                 title: 'Pool',
