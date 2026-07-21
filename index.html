@@ -21,11 +21,11 @@
     <!-- Loadbar -->
     <div class="loadbar" role="progressbar" aria-label="Cargando portafolio" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
-    <!-- Fondo dinámico -->
+    <!-- Fondo dinámico (voxels) -->
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div class="bg-vignette" aria-hidden="true"></div>
 
-    <!-- Canvas para objetos interactivos (físicas) -->
+    <!-- Canvas para objetos interactivos con físicas -->
     <canvas id="physics-canvas" aria-hidden="true"></canvas>
 
     <!-- NAV -->
@@ -80,7 +80,7 @@
             <div class="grid portfolio-grid">
                 <!-- Card Forest -->
                 <article class="card portfolio-card reveal" data-project="forest" role="button" tabindex="0">
-                    <div class="card-image" style="background-image: url(assets/proyectos/forest-thumb.jpg)">
+                    <div class="card-image" style="background-image: linear-gradient(135deg, #2d3a2a, #1a2218);">
                         <span class="card-tag">Ambiente</span>
                     </div>
                     <h3 class="card-title">Forest</h3>
@@ -235,7 +235,6 @@
     <div class="project-modal" id="projectModal" aria-hidden="true">
         <div class="project-modal-backdrop" data-modal-close></div>
         <div class="project-modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
-            <!-- La X de cerrar ahora está fija fuera de la imagen -->
             <button class="project-modal-close" type="button" aria-label="Cerrar" data-modal-close>&times;</button>
 
             <div class="project-modal-media">
@@ -254,7 +253,6 @@
                     </div>
                 </div>
 
-                <!-- INFO SUPERPUESTA CON ESTILO CRISTAL -->
                 <div class="project-modal-info glass">
                     <h3 class="modal-title" id="modalTitle"></h3>
                     <p class="modal-desc" id="modalDesc"></p>
@@ -265,11 +263,11 @@
         </div>
     </div>
 
-    <!-- Librería Matter.js para físicas -->
+    <!-- LIBRERÍA MATTER.JS (físicas) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-    <!-- Script principal -->
-    <script src="script.js" defer></script>
-    <!-- Script de físicas (objetos interactivos) -->
+    <!-- SCRIPT DE FÍSICAS -->
     <script src="script-fisicas.js" defer></script>
+    <!-- SCRIPT PRINCIPAL -->
+    <script src="script.js" defer></script>
 </body>
 </html>
