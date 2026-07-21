@@ -262,7 +262,7 @@
     revealEls.forEach((el) => revealObserver.observe(el));
 
     // ============================================================
-    // 3. MODAL — vista 16:9 + slider de breakdown
+    // 3. MODAL — vista gigante + slider de breakdown
     // ============================================================
     const modal = document.getElementById('projectModal');
     if (modal) {
@@ -278,14 +278,14 @@
         const breakdownBtn = modal.querySelector('.modal-breakdown-btn');
         let lastFocused = null;
 
-        // 👇 Datos de los proyectos (¡Reemplaza los gradientes por tus imágenes!)
+        // 📌 DATOS DE LOS PROYECTOS (¡REEMPLAZA CON TUS IMÁGENES!)
         const projectsData = {
             forest: {
                 title: 'Forest',
                 desc: 'Render realista de un bosque oscuro con iluminación dramática. Modelado en Blockbench, texturizado y renderizado en Blender Cycles.',
                 tags: ['Blender', 'Blockbench', 'Cycles'],
-                clay: 'url(assets/forest-raw.jpg)', // ← url(assets/proyectos/forest-clay.jpg)
-                final: 'url(assets/forest.jpg)', // ← url(assets/proyectos/forest-final.jpg)
+                clay: 'linear-gradient(135deg, #2e2e2e, #1a1a1a)', // Cambiar a: url(assets/proyectos/forest-clay.jpg)
+                final: 'linear-gradient(135deg, #3d2a1a, #221510)', // Cambiar a: url(assets/proyectos/forest-final.jpg)
             },
             pool: {
                 title: 'Pool',
@@ -310,41 +310,57 @@
             },
         };
 
+        // Función para establecer el split del slider
         function setSplit(percent) {
             const clamped = Math.max(0, Math.min(100, percent));
             compareSliderEl.style.setProperty('--split', clamped + '%');
             compareHandle.setAttribute('aria-valuenow', String(Math.round(clamped)));
         }
 
+        // Cerrar con Escape
         function onKeydown(e) {
             if (e.key === 'Escape') closeModal();
         }
 
+        // Abrir modal
         function openModal(projectKey) {
             const data = projectsData[projectKey];
-            if (!data) return;
+            if (!data) {
+                console.error('Proyecto no encontrado:', projectKey);
+                return;
+            }
+
+            console.log('Abriendo modal para:', projectKey);
+            console.log('Datos:', data);
 
             lastFocused = document.activeElement;
 
+            // Asignar título, descripción y tags
             modalTitleEl.textContent = data.title;
             modalDescEl.textContent = data.desc;
             modalTagsEl.innerHTML = data.tags.map((t) => `<li>${t}</li>`).join('');
-            modalFinalView.style.backgroundImage = data.final;
-            compareBeforeEl.style.backgroundImage = data.clay;
-            compareAfterEl.style.backgroundImage = data.final;
 
+            // Asignar imágenes (con fallback)
+            modalFinalView.style.backgroundImage = data.final || 'linear-gradient(135deg, #2a2a2e, #1a1a1e)';
+            compareBeforeEl.style.backgroundImage = data.clay || 'linear-gradient(135deg, #2a2a2e, #1a1a1e)';
+            compareAfterEl.style.backgroundImage = data.final || 'linear-gradient(135deg, #2a2a2e, #1a1a1e)';
+
+            // Resetear estado del breakdown
             modal.classList.remove('showing-breakdown');
             setSplit(50);
             breakdownBtn.textContent = 'Ver Breakdown';
 
+            // Abrir modal
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('no-scroll');
             document.addEventListener('keydown', onKeydown);
 
+            // Enfocar el panel para accesibilidad
             requestAnimationFrame(() => modalPanel.focus());
         }
 
+        // Cerrar modal
         function closeModal() {
             modal.classList.remove('open');
             modal.setAttribute('aria-hidden', 'true');
@@ -355,10 +371,12 @@
             }
         }
 
+        // Eventos para cerrar modal
         modal.querySelectorAll('[data-modal-close]').forEach((el) => {
             el.addEventListener('click', closeModal);
         });
 
+        // Botón de breakdown
         breakdownBtn.addEventListener('click', () => {
             const isShowing = modal.classList.toggle('showing-breakdown');
             breakdownBtn.textContent = isShowing ? 'Ocultar breakdown' : 'Ver Breakdown';
@@ -401,11 +419,13 @@
         // ============================================================
         // 4. ABRIR MODAL DESDE LAS CARDS Y BOTONES "Ver más"
         // ============================================================
+        // Clic en la propia card (excepto si es el botón)
         document.querySelectorAll('.portfolio-card').forEach((card) => {
             const project = card.dataset.project;
             if (project) {
                 card.addEventListener('click', (e) => {
                     if (e.target.classList.contains('card-btn')) return;
+                    console.log('Card click:', project);
                     openModal(project);
                 });
                 card.addEventListener('keydown', (e) => {
@@ -417,15 +437,22 @@
             }
         });
 
+        // Clic en el botón "Ver más"
         document.querySelectorAll('.card-btn').forEach((btn) => {
             const project = btn.dataset.project;
             if (project) {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    console.log('Botón Ver más click:', project);
                     openModal(project);
                 });
             }
         });
+
+        // Exponer la función openModal globalmente para depuración
+        window.openModal = openModal;
+    } else {
+        console.error('Modal no encontrado en el DOM');
     }
 
     // ============================================================
@@ -477,7 +504,6 @@
     }
     window.scrollTo(0, 0);
 
-    // El scroll ya está bloqueado por CSS (body overflow: hidden)
     function enableScrollAndShowCards() {
         document.body.classList.add('scroll-enabled');
         setTimeout(() => {
@@ -508,4 +534,7 @@
             enableScrollAndShowCards();
         });
     });
+
+    console.log('✅ Script cargado correctamente');
+    console.log('📌 Para abrir un modal manualmente, usa: openModal("forest")');
 })();
