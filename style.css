@@ -81,8 +81,11 @@ body.scroll-enabled {
     width: 100vw;
     height: 100vh;
     z-index: 5;
-    pointer-events: auto; /* ← CAMBIADO: ahora captura eventos */
+    pointer-events: none; /* Por defecto deja pasar los clics al resto de la web */
     display: block;
+}
+#physics-canvas.pc-active {
+    pointer-events: auto; /* Solo se activa cuando el mouse está sobre un objeto o arrastrando */
     touch-action: none; /* Evita scroll al arrastrar en móviles */
 }
 
