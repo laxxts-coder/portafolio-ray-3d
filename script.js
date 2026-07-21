@@ -262,7 +262,7 @@
     revealEls.forEach((el) => revealObserver.observe(el));
 
     // ============================================================
-    // 3. MODAL — vista grande + slider de breakdown
+    // 3. MODAL — vista gigante + slider de breakdown
     // ============================================================
     const modal = document.getElementById('projectModal');
     if (modal) {
@@ -470,40 +470,52 @@
     }
 
     // ============================================================
-    // 7. ENFOQUE AL INICIO (siempre arriba)
+    // 7. ENFOQUE AL INICIO Y BLOQUEO DE SCROLL
     // ============================================================
     if (window.location.hash) {
         history.replaceState(null, '', window.location.pathname + window.location.search);
     }
     window.scrollTo(0, 0);
 
-    // ============================================================
-    // 8. BLOQUEO DE SCROLL INICIAL Y DESPLIEGUE AL HACER CLIC EN "VER BUILDS"
-    // ============================================================
+    // El scroll ya está bloqueado por CSS (body overflow: hidden)
+    // Función para desbloquear el scroll y mostrar las cards
+    function enableScrollAndShowCards() {
+        document.body.classList.add('scroll-enabled');
+        // Forzar visibilidad de las cards y el header de #build
+        setTimeout(() => {
+            document.querySelectorAll('#build .card.reveal').forEach(card => {
+                card.classList.add('visible');
+            });
+            const header = document.querySelector('#build .section-header.reveal');
+            if (header) header.classList.add('visible');
+        }, 300);
+    }
+
+    // Al hacer clic en "Ver builds"
     const verBuildsBtn = document.getElementById('verBuildsBtn');
     if (verBuildsBtn) {
         verBuildsBtn.addEventListener('click', function(e) {
-            // Prevenir el comportamiento predeterminado del enlace
-            e.preventDefault();
-
-            // Desbloquear el scroll del body
-            document.body.classList.add('scroll-unlocked');
-
-            // Forzar la visibilidad de las cards de la sección #build
-            const cards = document.querySelectorAll('#build .card.reveal');
-            cards.forEach(card => {
-                card.classList.add('visible');
-            });
-
-            // Forzar el header de la sección
-            const header = document.querySelector('#build .section-header.reveal');
-            if (header) header.classList.add('visible');
-
-            // Desplazarse suavemente hasta la sección #build
-            const target = document.querySelector('#build');
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
+            // No prevenimos el comportamiento por defecto (scroll suave)
+            // Pero desbloqueamos el scroll y mostramos las cards
+            enableScrollAndShowCards();
         });
     }
+
+    // Al hacer clic en "Contactar" también desbloqueamos
+    const contactBtn = document.getElementById('contactBtn');
+    if (contactBtn) {
+        contactBtn.addEventListener('click', function(e) {
+            enableScrollAndShowCards();
+        });
+    }
+
+    // También desbloqueamos al hacer clic en cualquier enlace del nav
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            enableScrollAndShowCards();
+        });
+    });
+
+    // Si el usuario ya tiene scroll habilitado (por ejemplo, si recarga estando abajo), lo forzamos
+    // pero eso no debería pasar porque el scroll está bloqueado por CSS.
 })();
